@@ -1,0 +1,49 @@
+buildscript {
+    ext {
+        springBootVersion = "2.6.2"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+allprojects {
+    group = "com.sp.stringcat"
+}
+
+subprojects {
+    apply {
+        plugin("java")
+        plugin("org.springframework.boot")
+        plugin("io.spring.dependency-management")
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    sourceCompatibility = "11"
+
+    dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-validation")
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
