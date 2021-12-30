@@ -1,4 +1,4 @@
 swagger-info:
-  title: Swagger
-  description: Swagger Config
+  title: stringcat
+  description: stringcat REST API
   version: 1.0
