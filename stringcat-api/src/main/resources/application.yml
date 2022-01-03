@@ -1,0 +1,4 @@
+swagger-info:
+  title: stringcat
+  description: stringcat REST API
+  version: 1.0
