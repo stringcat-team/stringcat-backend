@@ -1,4 +1,4 @@
-package com.sp.domain.follow;
+package com.sp.domain.domain.follow;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

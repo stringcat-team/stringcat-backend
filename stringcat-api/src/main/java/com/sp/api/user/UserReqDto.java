@@ -1,6 +1,10 @@
 package com.sp.api.user;
 
-public class UserReqDto {
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+public class UserReqDto {
 
 }
