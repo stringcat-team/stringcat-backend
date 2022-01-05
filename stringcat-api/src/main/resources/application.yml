@@ -1,3 +1,5 @@
+
+
 swagger-info:
   title: stringcat
   description: stringcat REST API
@@ -9,3 +11,5 @@ spring:
     default: local
     include:
       - domain
+server:
+  port: 8890
