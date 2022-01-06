@@ -1,6 +1,7 @@
 package com.sp.domain.domain.user;
 
 import com.sp.domain.domain.grade.Grade;
+import com.sp.domain.domain.userskill.UserSkill;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
@@ -18,7 +19,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,13 +59,10 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserSkill> userSkills = new ArrayList<>();
-
     @Column
     private boolean deleted;
 
-    public User() {
+    public Users() {
 
     }
 }

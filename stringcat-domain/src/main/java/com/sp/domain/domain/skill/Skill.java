@@ -1,7 +1,8 @@
-package com.sp.domain.domain.user;
+package com.sp.domain.domain.skill;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -30,8 +31,5 @@ public class Skill {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "skill")
-    private List<UserSkill> users = new ArrayList<>();
 
 }

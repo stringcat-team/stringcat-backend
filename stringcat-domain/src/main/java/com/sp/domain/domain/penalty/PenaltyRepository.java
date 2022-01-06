@@ -1,4 +1,6 @@
 package com.sp.domain.domain.penalty;
 
-public interface PenaltyRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
 }
