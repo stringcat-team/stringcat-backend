@@ -1,3 +1,5 @@
+
+
 swagger-info:
   title: stringcat
   description: stringcat REST API
@@ -9,3 +11,17 @@ spring:
     default: local
     include:
       - domain
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 102988257530-jnjcour3v8u6dd7jblu4i19ekd6fk7lh.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+          github:
+            client-id: f24de39e99c6daa83a54
+            client-secret: 96ec7839386969a294828bace478a67073deb36e
+
+server:
+  port: 8890
