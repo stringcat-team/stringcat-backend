@@ -3,5 +3,3 @@ include 'stringcat-api'
 include 'stringcat-batch'
 include 'stringcat-common'
 include 'stringcat-domain'
-include 'stringcat-auth'
-
