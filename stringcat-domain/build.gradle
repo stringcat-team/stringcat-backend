@@ -1,6 +1,6 @@
 dependencies {
 
-    implementation project(":stringcat-common")
+    api project(":stringcat-common")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
