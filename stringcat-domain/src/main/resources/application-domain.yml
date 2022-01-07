@@ -8,13 +8,20 @@ spring:
     url: ENC(YoGl+u97uAvpJetTXSMDsGjkpltOSlgozC1ubwKk7Vi+xcWai8EE6TxgqzdZOI6naSSKbDBQBgaYzzL5KkW6VbjRdGQMriWrF4g4WgujeoIG5cYd6lBms6FVw/EiH7WW+9fRVWpefu5rOd+maE4j4sHy9HioA0aJ6NdrQibBksBt6kS7xBmb5BuDmTubwA4qp/zUqOvs2y8=)
     username: ENC(394N3jZkj3yMgtdfdMgNfJh6RsQ/iQRd)
     password: ENC(4ljRSSSzmeH68gqA0cY+GKLSI0JVpFvP)
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
   jpa:
+    generate-ddl: false
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
     open-in-view: false
     hibernate:
       ddl-auto: none
