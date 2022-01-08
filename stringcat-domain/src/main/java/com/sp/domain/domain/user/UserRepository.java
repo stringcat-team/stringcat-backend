@@ -1,6 +1,15 @@
 package com.sp.domain.domain.user;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.sp.domain.domain.ParentRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository <Users, Long> {
+import java.io.Serializable;
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends ParentRepository<Users, Long> {
+
+    Optional<Users> findByEmail (String email);
+    Optional<Users> findById (Long id);
+
 }

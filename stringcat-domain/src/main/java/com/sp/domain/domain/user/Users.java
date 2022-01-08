@@ -1,9 +1,11 @@
 package com.sp.domain.domain.user;
 
+import com.sp.domain.code.UserRole;
 import com.sp.domain.domain.grade.Grade;
 import com.sp.domain.domain.userskill.UserSkill;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -15,7 +17,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@Setter
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
@@ -23,47 +26,99 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     @OneToOne
     @JoinColumn(name = "grade_id")
-    private Grade grade;
+    public Grade grade;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    public UserRole role;
 
     @Column(name = "social_id")
-    private String socialId;
+    public String socialId;
 
     @Column
-    private String email;
+    public String email;
 
     @Column
-    private String password;
+    public String password;
 
     @Column
-    private String nickname;
+    public String nickname;
 
     @Column
-    private String github;
+    public String github;
 
     @Column
-    private String bio;
+    public String bio;
 
     @Column(columnDefinition = "TEXT")
-    private String intro;
+    public String intro;
 
     @Column(name = "image_path")
-    private String imagePath;
+    public String imagePath;
 
     @Column(name = "email_flag")
-    private boolean emailFlag;
+    public boolean emailFlag;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    public LocalDateTime createdAt;
 
     @Column
-    private boolean deleted;
+    public boolean deleted;
 
-    public Users() {
+    public void setGrade(Grade grade) {
+        this.grade = grade;
+    }
 
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public void setEmailFlag(boolean emailFlag) {
+        this.emailFlag = emailFlag;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
 }

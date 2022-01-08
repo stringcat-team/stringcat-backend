@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
 
+    SUCCESS(OK, "ok", "완료."),
+
     // 400 Bad Request
     VALIDATION_EXCEPTION(BAD_REQUEST, "VA01", "잘못된 요청입니다."),
 
@@ -36,7 +38,13 @@ public enum ErrorCode {
     SERVER_UNAVAILABLE_EXCEPTION(SERVICE_UNAVAILABLE,  "SU01","서버가 점검중 입니다.\n잠시 후 다시 시도해주세요.");
 
 
+    @Getter
     private final HttpStatusCode statusCode;
+
+    @Getter
     private final String code;
+
+    @Getter
     private final String message;
+
 }
