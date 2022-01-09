@@ -1,4 +1,4 @@
-package com.sp.api.common.config;
+package com.sp.api.common.payload;
 
 public interface SpringProfile {
 
@@ -6,4 +6,5 @@ public interface SpringProfile {
     public static final String LOCAL_DEV = "local_dev";
     public static final String DEV = "dev";
     public static final String PROD = "prod";
+
 }

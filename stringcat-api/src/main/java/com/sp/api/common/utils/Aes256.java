@@ -1,6 +1,5 @@
 package com.sp.api.common.utils;
 
-import com.sp.api.common.exception.ApiException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class AuthDto {
+public class AuthReqDto {
 
     @Data
     @Accessors(chain = true)
@@ -45,6 +45,10 @@ public class AuthDto {
         @ApiModelProperty(value = "자기 소개", example = "자기소개는 자유롭게 넣을 수 있습니다.")
         String bio;
 
+        @ApiModelProperty(value = "한줄 소개", example = "true", required = true)
+        @NotNull(message = "이메일 알림 수신 동의를 해주세요!")
+        boolean emailFlag;
+
     }
 
     @Data
@@ -60,18 +64,6 @@ public class AuthDto {
         @ApiModelProperty(value = "비밀번호", example = "testpw1234", required = true)
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         String password;
-
-    }
-
-    @Data
-    @Accessors(chain = true)
-    @NoArgsConstructor
-    @ApiModel("Auth-VerificationEmail")
-    public static class Verification {
-
-        @ApiModelProperty(value = "사용자 이메일", example = "stringcat@test.com", required = true)
-        @NotEmpty(message = "이메일 주소는 필수 입니다.")
-        String email;
 
     }
 
