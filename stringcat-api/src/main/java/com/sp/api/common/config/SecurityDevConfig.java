@@ -1,8 +1,9 @@
 package com.sp.api.common.config;
 
-import com.sp.api.common.payload.SpringProfile;
-import com.sp.api.common.security.*;
 
+import com.sp.api.common.payload.SpringProfile;
+import com.sp.api.common.security.JwtAuthenticationEntryPoint;
+import com.sp.api.common.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +31,8 @@ import org.springframework.web.filter.CorsFilter;
         jsr250Enabled = true,
         prePostEnabled = true
 )
-@Profile(SpringProfile.PROD)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Profile({SpringProfile.DEV, SpringProfile.LOCAL_DEV, SpringProfile.LOCAL})
+public class SecurityDevConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -81,7 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html").permitAll();
+                .antMatchers("/").permitAll();
+        //.antMatchers("/swagger-ui.html").permitAll();
     }
 
     @Bean

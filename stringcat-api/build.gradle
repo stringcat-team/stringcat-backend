@@ -1,7 +1,7 @@
 dependencies {
     implementation project(":stringcat-domain")
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -31,5 +31,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
     implementation 'org.springframework.security:spring-security-oauth2-client:5.5.1'
+
+    // https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime
+    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'
 
 }

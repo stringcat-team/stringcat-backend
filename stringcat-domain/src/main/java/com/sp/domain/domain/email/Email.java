@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "Email")

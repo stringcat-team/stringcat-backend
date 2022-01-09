@@ -1,13 +1,21 @@
+server:
+  port: 8181
+
 swagger-info:
   title: stringcat
   description: stringcat REST API
   version: 1.0
 
+biz:
+  jwt:
+    issuer: "string-cat.so"
+  secret-key: "secretkey"
+
 spring:
   profiles:
     active: local
     default: local
-    include: auth
+    include:
       - domain
   security:
     oauth2:
@@ -24,17 +32,10 @@ spring:
             client-id: vTE1PxAl2QAJdJYbSOZ4dFZMbKfCqwE9
             redirect-uri: "{baseUrl}/{action}/oauth2/{registrationId}"
             scope: profile_image, account_email
-            client-name: Kakao
+            client-name: kakao
         provider:
           kakao:
             authorization_uri: http://localhost:8890/oauth/login
             token_uri: http://localhost:8890/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user_name_attribute: id
-
-server:
-  port: 8890
-
-app:
-  auth:
-    tokenSecret:
