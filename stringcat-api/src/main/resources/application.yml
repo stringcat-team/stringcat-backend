@@ -6,10 +6,8 @@ swagger-info:
   description: stringcat REST API
   version: 1.0
 
-biz:
-  jwt:
-    issuer: "string-cat.so"
-  secret-key: "secretkey"
+jwt:
+  secret: stringcatbackend
 
 spring:
   profiles:
