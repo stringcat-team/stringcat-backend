@@ -4,12 +4,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     //security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
+    //implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
 
     //oauth
-    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.5.RELEASE'
+    //implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.5.RELEASE'
 
 
     // swagger
