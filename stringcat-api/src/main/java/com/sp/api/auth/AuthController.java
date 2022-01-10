@@ -48,6 +48,30 @@ public class AuthController {
         return ApiResponse.ok(nickname);
     }
 
+    @PostMapping("/oauth2/google")
+    @ApiOperation(value = "구글 소셜 로그인")
+    public ApiResponse<AuthResDto> loginByGoogle(@RequestBody String token, AuthReqDto.AdditionalInfo form) {
+        log.info("구글 로그인 REQ : " + token);
+
+        String nickname = userService.kakaoLogin(token, form);
+
+        log.info("구글 로그인 RES : " + nickname);
+
+        return ApiResponse.ok(nickname);
+    }
+
+    @PostMapping("/oauth2/github")
+    @ApiOperation(value = "깃헙 소셜 로그인")
+    public ApiResponse<AuthResDto> loginByGithub(@RequestBody String token, AuthReqDto.AdditionalInfo form) {
+        log.info("깃헙 로그인 REQ : " + token);
+
+        String nickname = userService.kakaoLogin(token, form);
+
+        log.info("깃헙 로그인 RES : " + nickname);
+
+        return ApiResponse.ok(nickname);
+    }
+
     @PostMapping("/login")
     @ApiOperation(value = "일반 로그인")
     public ApiResponse<AuthResDto> login(@RequestBody AuthReqDto.Login form) {

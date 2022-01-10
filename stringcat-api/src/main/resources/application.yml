@@ -15,6 +15,7 @@ spring:
     default: local
     include:
       - domain
+
   security:
     oauth2:
       client:
