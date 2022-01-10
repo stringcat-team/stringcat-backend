@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-  # test
   workflow_dispatch:
 
 jobs:
