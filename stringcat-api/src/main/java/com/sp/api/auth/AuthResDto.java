@@ -1,26 +1,29 @@
 package com.sp.api.auth;
 
+import com.sp.domain.domain.user.Users;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public class AuthResDto {
-    private String accessToken;
-    private String tokenType = "Bearer";
 
-    public AuthResDto(String accessToken) {
+    private final String accessToken;
+    private final String refreshToken;
+    private final Long id;
+    private final String email;
+
+    public AuthResDto(String accessToken, Users user) {
         this.accessToken = accessToken;
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.refreshToken = user.getRefreshToken();
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
+    public AuthResDto(String accessToken, String refreshToken, Users user) {
         this.accessToken = accessToken;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+        this.refreshToken = refreshToken;
+        this.id = user.getId();
+        this.email = user.getEmail();
     }
 }

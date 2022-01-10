@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // 401 UnAuthorized
     UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "UA01", "다시 인증해주세요."),
+    MALFORMED_TOKEN_EXCEPTION(UNAUTHORIZED, "MT01", "잘못된 형식의 토큰입니다."),
 
     // 403 Forbidden
     FORBIDDEN_EXCEPTION(FORBIDDEN, "FB01", "허용되지 않는 요청입니다."),

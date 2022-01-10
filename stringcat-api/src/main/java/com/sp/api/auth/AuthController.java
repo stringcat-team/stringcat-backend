@@ -1,26 +1,16 @@
 package com.sp.api.auth;
 
-import com.sp.api.common.exception.BadRequestException;
-import com.sp.api.common.security.JwtTokenProvider;
 import com.sp.api.common.utils.ApiResponse;
+import com.sp.api.common.utils.JwtUtil;
+import com.sp.api.user.UserDetailServiceImpl;
 import com.sp.api.user.UserService;
-import com.sp.domain.domain.user.UserRepository;
 import com.sp.domain.domain.user.Users;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
-import java.net.URI;
 
 @Slf4j
 @RestController
@@ -32,24 +22,54 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    JwtTokenProvider tokenProvider;
+    JwtUtil tokenProvider;
 
     @Autowired
     UserService userService;
 
-    @Value("5256000")
-    int jwtExpiredMinutes;
-
-    @Value("5256000")
-    int refreshJwtExpiredMinutes;
+    @Autowired
+    UserDetailServiceImpl userDetailService;
 
     @GetMapping("/hello")
     @ApiOperation(value = "헬스체크")
     public String hello() {
         return "I'm ok!!!";
+    }
+
+    @PostMapping("/oauth2/kakao")
+    @ApiOperation(value = "카카오 소셜 로그인")
+    public ApiResponse<AuthResDto> loginByKakao(@RequestBody String token, AuthReqDto.AdditionalInfo form) {
+        log.info("카카오 로그인 REQ : " + token);
+
+        String nickname = userService.kakaoLogin(token, form);
+
+        log.info("카카오 로그인 RES : " + nickname);
+
+        return ApiResponse.ok(nickname);
+    }
+
+    @PostMapping("/login")
+    @ApiOperation(value = "일반 로그인")
+    public ApiResponse<AuthResDto> login(@RequestBody AuthReqDto.Login form) {
+        log.info("일반 로그인 REQ : " + form);
+
+        Users user = userService.login(form);
+
+        log.info("일반 로그인 RES : " + user);
+
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/sign-up")
+    @ApiOperation(value = "회원가입")
+    public ApiResponse<AuthResDto> signup(@RequestBody AuthReqDto.SignUp form) {
+        log.info("회원가입 REQ : " + form);
+
+        Users res = userService.signUp(form);
+
+        log.info("회원가입 RES : " + res);
+
+        return ApiResponse.ok();
     }
 
 }

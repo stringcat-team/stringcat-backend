@@ -39,7 +39,7 @@ public class Users {
     public AuthProviders authProvider;
 
     @Column(name = "social_id")
-    public String socialId;
+    public AuthProviders socialId;
 
     @Column
     public String email;
@@ -70,5 +70,13 @@ public class Users {
 
     @Column
     public boolean deleted;
+
+    public String refreshToken;
+
+    public Users refreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+
+        return this;
+    }
 
 }

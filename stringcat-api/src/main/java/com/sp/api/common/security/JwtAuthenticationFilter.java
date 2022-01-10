@@ -1,14 +1,20 @@
 package com.sp.api.common.security;
 
 import com.sp.api.common.exception.ApiException;
+import com.sp.api.common.utils.JwtUtil;
 import com.sp.api.user.UserDetailImpl;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,43 +22,61 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Objects;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtTokenProvider tokenProvider;
+    private JwtUtil tokenProvider;
 
     @Autowired
     private UserDetailsService userDetailService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String jwt = tokenProvider.getJwtFromRequest(request);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                JwtTokenProvider.TokenFormat token = tokenProvider.getTokenInfo(jwt);
+        String header = request.getHeader("Authorization");
+        String username = null;
+        String authToken = null;
 
-                UserDetailImpl userDetails = (UserDetailImpl)userDetailService.loadUserByUsername(token.getEmail());
+        if(StringUtils.equals(request.getMethod(), "OPTIONS")) {
+            log.error("REQ OPTIONS METHOD");
+        }
 
-                if (Objects.isNull(userDetails) ||
-                        !userDetails.getEmail().equals(token.getEmail())) {
-                    log.error("고객정보와 토큰정보가 일치 하지 않습니다.");
-                    log.error("db [{}], token [{}]", userDetails.toString(), token.getEmail());
-                    throw new ApiException("고객정보와 요청된 토큰의 고객정보가 일치 하지 않습니다.");
-                }
+        if(header != null && header.startsWith("Bearer ")) {
+            authToken = header.replace("Bearer ", "");
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                request.setAttribute("ID", token.getId());
-                request.setAttribute("USER_ID", token.getEmail());
+            try {
+                username = tokenProvider.getUsernameFromToken(authToken);
+            } catch (IllegalArgumentException e) {
+                log.error("username을 얻어오면서 에러 발생 : ", e);
+            } catch (ExpiredJwtException e) {
+                log.error("토큰이 더이상 유효하지 않습니다 : ", e);
             }
-        } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+
+        } else {
+            log.error("bearer 문자열을 찾지 못했습니다. header는 무시");
+        }
+
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = userDetailService.loadUserByUsername(username);
+
+            if(tokenProvider.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ADMIN")));
+
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                log.info("인증된 사용자 " + username + ", security context");
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         }
 
         filterChain.doFilter(request, response);

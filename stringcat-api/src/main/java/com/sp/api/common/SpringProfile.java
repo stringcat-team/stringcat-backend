@@ -1,4 +1,4 @@
-package com.sp.api.common.payload;
+package com.sp.api.common;
 
 public interface SpringProfile {
 

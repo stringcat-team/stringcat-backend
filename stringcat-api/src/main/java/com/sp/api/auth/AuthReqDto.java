@@ -36,7 +36,7 @@ public class AuthReqDto {
         @NotEmpty(message = "비밀번호를 다시한번 입력해주세요.")
         String password2;
 
-        @ApiModelProperty(value = "비밀번호", example = "Java", notes = "기술스택은 꼭 영어로만 작성되어야 합니다. ")
+        @ApiModelProperty(value = "기술", example = "Java", notes = "기술스택은 꼭 영어로만 작성되어야 합니다. ")
         List<String> skillList;
 
         @ApiModelProperty(value = "한줄 소개", example = "안녕하세요. 백엔드 개발자 OOO입니다!")
@@ -48,6 +48,9 @@ public class AuthReqDto {
         @ApiModelProperty(value = "한줄 소개", example = "true", required = true)
         @NotNull(message = "이메일 알림 수신 동의를 해주세요!")
         boolean emailFlag;
+
+        @ApiModelProperty(value = "깃허브 주소", example = "https://github.com/heejeong-choi")
+        String github;
 
     }
 
@@ -65,6 +68,37 @@ public class AuthReqDto {
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         String password;
 
+    }
+
+    @Data
+    @ApiModel("Auth-JwtRequestDto")
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    public static class JwtRequestForm {
+
+        Long id;
+        String accessToken;
+        String refreshToken;
+
+    }
+
+    @Data
+    @ApiModel("Auth-UserForOAuth2")
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    public static class AdditionalInfo {
+
+        String github;
+        String bio;
+        String intro;
+
+    }
+
+    @Data
+    @ApiModel("Auth-OAuth2Token")
+    @NoArgsConstructor
+    public static class OAuth2Token {
+        String accessToken;
     }
 
 }

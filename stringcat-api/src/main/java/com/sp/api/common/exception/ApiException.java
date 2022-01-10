@@ -1,21 +1,12 @@
 package com.sp.api.common.exception;
 
+import com.sp.common.type.HttpStatusCode;
+import com.sp.exception.type.ErrorCode;
 import lombok.Data;
 
 @Data
 public class ApiException extends RuntimeException {
-    private String status;
-    private String mesage;
 
-    public ApiException() { super(); }
+    private final ErrorCode errorCode;
 
-    public ApiException(String message) {
-        super(message);
-        this.status = "error";
-    }
-
-    public ApiException(String status, String message) {
-        super(message);
-        this.status = status;
-    }
 }

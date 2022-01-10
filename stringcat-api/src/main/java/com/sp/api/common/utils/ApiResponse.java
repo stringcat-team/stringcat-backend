@@ -1,50 +1,46 @@
 package com.sp.api.common.utils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sp.exception.type.ErrorCode;
+import com.sp.common.type.HttpStatusCode;
 
 public class ApiResponse<T> {
-    @JsonProperty("status")
+
     private String status;
 
-    @JsonProperty("message")
     private String message;
 
-    @JsonProperty("redirect")
     private String redirect = "";
 
-    @JsonProperty("data")
     private T t;
 
-    public ApiResponse(ResponseStatus status) {
-        this.status = status.getDescEng();
+    public ApiResponse(HttpStatusCode status) {
+        this.status = status.getDesc();
     }
 
-    public ApiResponse(ResponseStatus status, String message) {
-        this.status = status.getDescEng();
+    public ApiResponse(HttpStatusCode status, String message) {
+        this.status = status.getDesc();
         this.message = message;
     }
 
-    public ApiResponse(ResponseStatus status, String message, T t) {
-        this.status = status.getDescEng();
+    public ApiResponse(HttpStatusCode status, String message, T t) {
+        this.status = status.getDesc();
         this.message = message;
         this.t = t;
     }
 
     public static ApiResponse ok() {
-        return new ApiResponse(ResponseStatus.SUCCESS, "ok");
+        return new ApiResponse(HttpStatusCode.OK, "ok");
     }
 
     public static ApiResponse ok(Object object) {
-        return new ApiResponse(ResponseStatus.SUCCESS, "ok", object);
+        return new ApiResponse(HttpStatusCode.OK, "ok", object);
     }
 
     public static ApiResponse error(String message) {
-        return new ApiResponse(ResponseStatus.FAILURE, message);
+        return new ApiResponse(HttpStatusCode.INTERNAL_SERVER, message);
     }
 
     public static ApiResponse none_auth() {
-        return new ApiResponse(ResponseStatus.NONEAUTH, "noneAuth");
+        return new ApiResponse(HttpStatusCode.UNAUTHORIZED, "noneAuth");
     }
 
 
