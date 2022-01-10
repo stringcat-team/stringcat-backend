@@ -22,6 +22,3 @@ spring:
           github:
             client-id: f24de39e99c6daa83a54
             client-secret: 96ec7839386969a294828bace478a67073deb36e
-
-server:
-  port: 8890
