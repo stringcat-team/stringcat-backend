@@ -12,7 +12,7 @@ buildscript {
 }
 
 allprojects {
-    group = "com.sp.stringcat"
+    group = "com.sp"
 }
 
 subprojects {
