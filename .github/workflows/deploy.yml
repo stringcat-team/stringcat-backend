@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      STRINGCAT_JASYPT_PASSWORD: ${{ secrets.STRINGCAT_JASYPT_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
