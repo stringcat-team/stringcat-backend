@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    public UserDetailImpl loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByEmail(username)
+    public UserDetailImpl loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND));
 
         return new UserDetailImpl(user);

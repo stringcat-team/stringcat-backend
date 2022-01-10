@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication(scanBasePackages = "com.sp")
-@EnableConfigurationProperties
 public class StringcatApiApplication {
 
     public static void main(String[] args) {
