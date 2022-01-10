@@ -1,4 +1,4 @@
-name: freelec-springboot2-webservice
+name: stringcat-webservice
 
 on:
   push:
