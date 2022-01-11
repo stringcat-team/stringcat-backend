@@ -1,5 +1,6 @@
-package com.sp.domain.question;
+package com.sp.domain.answer;
 
+import com.sp.domain.question.Question;
 import com.sp.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,25 +17,26 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@Table(name = "question")
-public class Question {
+@Table(name = "answer")
+public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "question_id")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Question question;
 
-    @Column
-    private String title;
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
 
     @Column
-    private int hits;
+    private boolean seleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

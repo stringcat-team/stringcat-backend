@@ -1,5 +1,5 @@
 server:
-  port: 8181
+  port: 8890
 
 swagger-info:
   title: stringcat
@@ -7,7 +7,10 @@ swagger-info:
   version: 1.0
 
 jwt:
-  secret: stringcatbackend
+  secret:
+    key: stringcat.2022.02.28
+  token:
+    issuer: stringcat.be.developers
 
 spring:
   profiles:

@@ -1,6 +1,6 @@
-package com.sp.domain.question;
+package com.sp.domain.commentreply;
 
-import com.sp.domain.user.User;
+import com.sp.domain.comment.Comment;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,25 +16,19 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@Table(name = "question")
-public class Question {
+@Table(name = "comment_reply")
+public class CommentReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "parent_id")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column
-    private String title;
+    private Comment comment;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
-
-    @Column
-    private int hits;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

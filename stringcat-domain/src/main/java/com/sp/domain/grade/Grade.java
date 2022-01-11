@@ -1,6 +1,6 @@
-package com.sp.domain.question;
+package com.sp.domain.grade;
 
-import com.sp.domain.user.User;
+import com.sp.domain.code.GradeRange;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,33 +16,27 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@Table(name = "question")
-public class Question {
+@Table(name = "grade")
+public class Grade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column
-    private String title;
+    @Enumerated(EnumType.STRING)
+    private GradeRange name;
 
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+    @Column(name = "min_score")
+    private int minScore;
 
-    @Column
-    private int hits;
+    @Column(name = "max_score")
+    private int maxScore;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @Column
-    private boolean deleted;
+    private LocalDateTime updatedAt;
 
 }

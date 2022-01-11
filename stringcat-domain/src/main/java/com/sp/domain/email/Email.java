@@ -1,5 +1,6 @@
-package com.sp.domain.question;
+package com.sp.domain.email;
 
+import com.sp.domain.code.EmailType;
 import com.sp.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,33 +17,31 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@Table(name = "question")
-public class Question {
+@Table(name = "email")
+public class Email {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
     @Column
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+    @Enumerated(EnumType.STRING)
+    private EmailType type;
 
     @Column
-    private int hits;
+    private String uri;
+
+    @Column
+    private boolean expired;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Column
-    private boolean deleted;
 
 }

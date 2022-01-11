@@ -1,5 +1,8 @@
-package com.sp.domain.follow;
+package com.sp.domain.likes;
 
+import com.sp.domain.answer.Answer;
+import com.sp.domain.code.LikeDislike;
+import com.sp.domain.question.Question;
 import com.sp.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,21 +19,28 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@Table(name = "follow")
-public class Follow {
+@Table(name = "likes")
+public class Likes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private LikeDislike type;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_id")
+    private Question question;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "answer_id")
+    private Answer answer;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "from_user_id")
-    private Long fromUserId;
-
-    @Column(name = "to_user_id")
-    private Long toUserId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
