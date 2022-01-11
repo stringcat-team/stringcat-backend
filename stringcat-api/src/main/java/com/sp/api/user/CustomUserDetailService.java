@@ -3,7 +3,6 @@ package com.sp.api.user;
 import com.sp.api.common.exception.ApiException;
 import com.sp.domain.user.User;
 import com.sp.domain.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailAndDeletedFalse(email);
 
         return processLogin(user);
     }
