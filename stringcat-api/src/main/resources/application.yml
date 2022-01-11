@@ -1,5 +1,4 @@
-server:
-  port: 8890
+
 
 swagger-info:
   title: stringcat
@@ -41,3 +40,5 @@ spring:
             token_uri: http://localhost:8890/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user_name_attribute: id
+server:
+  port: 8080

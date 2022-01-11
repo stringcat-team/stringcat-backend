@@ -9,9 +9,9 @@ spring:
     username: heejeong
     password: MASTERDB1234
 
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
   jpa:
     generate-ddl: false
     properties:

@@ -2,6 +2,7 @@ package com.sp.api.common.config;
 
 import com.sp.api.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,12 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-@Profile({SpringProfiles.DEV, SpringProfiles.LOCAL_DEV, SpringProfiles.LOCAL})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserDetailsService userDetailsService;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserDetailsService userDetailsService;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() { return new JwtAuthenticationFilter(); }

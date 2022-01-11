@@ -4,6 +4,7 @@ import com.sp.api.common.utils.Sha256;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Sha256PasswordEncoder implements PasswordEncoder {
+
     @Override
     public String encode(CharSequence charSequence) {
         return Sha256.encode(charSequence.toString());
@@ -15,4 +16,5 @@ public class Sha256PasswordEncoder implements PasswordEncoder {
 
         return encode(charSequence).equals(s);
     }
+
 }

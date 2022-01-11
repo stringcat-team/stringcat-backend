@@ -27,7 +27,7 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     public CustomUserDetail processLogin(Optional<User> user) throws UsernameNotFoundException {
-        if(!user.isPresent()) {
+        if(user.isEmpty()) {
             throw new ApiException("회원정보를 찾지 못했습니다.");
         }
 
