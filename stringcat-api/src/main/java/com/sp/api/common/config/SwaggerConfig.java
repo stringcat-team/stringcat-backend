@@ -23,7 +23,6 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-@Profile({SpringProfiles.DEV, SpringProfiles.LOCAL_DEV, SpringProfiles.LOCAL})
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Value("${swagger-info.title}")

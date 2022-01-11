@@ -11,7 +11,6 @@ import com.sp.api.common.utils.Aes256;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,11 +24,7 @@ import java.util.Optional;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.token.issuer}")
-    private String issuer;
-
-    @Value("${jwt.secret.key}")
-    private String jwtSecretKey;
+    private final String jwtSecretKey = "stringcat.2022.02.28";
 
     private final Gson gson = new Gson();
 
@@ -60,6 +55,7 @@ public class JwtTokenProvider {
 
         String encClaim = Aes256.encrypt(claim, jwtSecretKey);
 
+        String issuer = "stringcat.be.developers";
         return JWT.create()
                 .withIssuer(issuer)
                 .withIssuedAt(iat)

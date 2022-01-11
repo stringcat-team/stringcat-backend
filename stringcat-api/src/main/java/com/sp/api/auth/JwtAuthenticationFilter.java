@@ -2,8 +2,7 @@ package com.sp.api.auth;
 
 import com.sp.api.common.exception.ApiException;
 import com.sp.api.user.CustomUserDetail;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,12 +20,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
+@NoArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    @Autowired JwtTokenProvider tokenProvider;
+
+    @Autowired UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

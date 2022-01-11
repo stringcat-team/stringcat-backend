@@ -5,12 +5,6 @@ swagger-info:
   description: stringcat REST API
   version: 1.0
 
-jwt:
-  secret:
-    key: stringcat.2022.02.28
-  token:
-    issuer: stringcat.be.developers
-
 spring:
   profiles:
     active: local
