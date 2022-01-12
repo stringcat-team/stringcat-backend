@@ -19,11 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired PasswordEncoder passwordEncoder;
@@ -37,13 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationFilter jwtAuthenticationFilter() { return new JwtAuthenticationFilter(); }
 
     public static final String[] IGNORE_PAGES = new String[]{
-            "/api/{v[12]}/hello/**",
-            "/h2-console/**",
-            "/v1/api-docs/**",
+            "/v2/api-docs/**",
             "/configuration/**",
             "/swagger-resources/**",
-            "/configuration/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/swagger*/**",
+            "/swagger-ui.html"
     };
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -70,7 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html").permitAll();
+                .antMatchers("/swagger-resources/**").permitAll()
+                .and()
+                .httpBasic()
+                .and()
+                .authorizeRequests()
+                .anyRequest().permitAll()
+                .antMatchers("/user/**").authenticated();
+
     }
 
 
