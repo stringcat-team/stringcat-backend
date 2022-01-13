@@ -1,10 +1,12 @@
-package com.sp.api.common.config;
+package com.sp.api.config;
 
-import com.sp.api.auth.JwtAuthenticationEntryPoint;
 import com.sp.api.auth.JwtAuthenticationFilter;
+import com.sp.api.common.utils.SpringProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,28 +18,34 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
+@Profile({SpringProfile.DEV, SpringProfile.LOCALDEV, SpringProfile.LOCAL})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired PasswordEncoder passwordEncoder;
 
     @Autowired UserDetailsService userDetailsService;
 
-    @Autowired
-    JwtAuthenticationEntryPoint unauthorizedHandler;
-
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() { return new JwtAuthenticationFilter(); }
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     public static final String[] IGNORE_PAGES = new String[]{
-            "/v2/api-docs/**",
+            "/h2-console/**",
+            "/v3/api-docs/**",
             "/configuration/**",
-            "/swagger-resources/**",
-            "/webjars/**",
-            "/swagger*/**",
-            "/swagger-ui.html"
+            "/webjars/**"
     };
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -64,15 +72,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .and()
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .antMatchers("/user/**").authenticated();
-
+                .antMatchers("/swagger*/**", "/auth/**").permitAll()
+                .anyRequest().authenticated();
     }
 
+    @Bean
+    public FilterRegistrationBean corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(Integer.MIN_VALUE);
+        return bean;
+    }
 
 }

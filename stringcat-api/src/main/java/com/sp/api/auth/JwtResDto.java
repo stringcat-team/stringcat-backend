@@ -11,7 +11,7 @@ public class JwtResDto {
 
     private String accessToken;
     private String refreshToken;
-    private String tokenType = "Bearer";
+    private String tokenType = "Bearer ";
     private Long id;
     private String email;
     private String nickname;

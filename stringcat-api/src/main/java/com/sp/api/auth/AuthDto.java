@@ -7,12 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class AuthDto {
-
-    public static class SignUp {
-
-    }
 
     @Data
     @Accessors(chain = true)
@@ -28,6 +25,16 @@ public class AuthDto {
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         private String password;
 
+    }
+
+    @Data
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    @ApiModel("Auth-TokenRefreshForm")
+    public static class TokenRefreshForm {
+        @ApiModelProperty(value = "user id", notes = "", example = "1234", required = true)
+        @NotNull(message = "회원 ID가 설정되지 않았습니다. 다시 로그인해 주세요.")
+        private Long userId;
     }
 
 }

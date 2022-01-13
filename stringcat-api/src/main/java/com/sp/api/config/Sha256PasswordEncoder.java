@@ -1,4 +1,4 @@
-package com.sp.api.common.config;
+package com.sp.api.config;
 
 import com.sp.api.common.utils.Sha256;
 import org.springframework.security.crypto.password.PasswordEncoder;

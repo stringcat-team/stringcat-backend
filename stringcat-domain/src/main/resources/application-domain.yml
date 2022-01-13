@@ -3,6 +3,7 @@ jasypt:
     password: stringcatbepw
 
 spring:
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://heejeong-db.cv35wjiwae1x.ap-northeast-2.rds.amazonaws.com:3306/stringcat
