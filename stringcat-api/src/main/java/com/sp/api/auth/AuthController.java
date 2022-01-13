@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/guest")
 @Api(value = "AuthController - 인증 관련 API")
 public class AuthController {
 

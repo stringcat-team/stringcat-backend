@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/h2-console/**",
             "/v3/api-docs/**",
             "/configuration/**",
-            "/webjars/**"
+            "/webjars/**",
+            "swagger*/**"
     };
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -72,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger*/**", "/auth/**").permitAll()
+                .antMatchers("/guest/**").permitAll()
                 .anyRequest().authenticated();
     }
 
