@@ -24,7 +24,13 @@ public class AuthDto {
         @ApiModelProperty(value = "비밀번호", example = "testpw12", required = true)
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         private String password;
+    }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel("Social Login Param")
+    public static class Social {
+        private String accessToken;
     }
 
     @Data
@@ -36,5 +42,4 @@ public class AuthDto {
         @NotNull(message = "회원 ID가 설정되지 않았습니다. 다시 로그인해 주세요.")
         private Long userId;
     }
-
 }
