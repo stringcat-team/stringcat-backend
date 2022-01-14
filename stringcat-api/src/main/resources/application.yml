@@ -1,39 +1,14 @@
+spring:
+  profiles:
+    active: local
+    default: local
+    include:
+      - domain
+
+server:
+  port: 8100
+
 swagger-info:
   title: stringcat
   description: stringcat REST API
   version: 1.0
-
-spring:
-  profiles:
-    active: localdev
-    include:
-      - domain
-  security:
-    user:
-      name: stringcat
-      password: 1234
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 102988257530-jnjcour3v8u6dd7jblu4i19ekd6fk7lh.apps.googleusercontent.com
-#            client-secret: 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
-#            scope: profile, email
-#          github:
-#            client-id: f24de39e99c6daa83a54
-#            client-secret: 96ec7839386969a294828bace478a67073deb36e
-#          kakao:
-#            client-id: vTE1PxAl2QAJdJYbSOZ4dFZMbKfCqwE9
-#            redirect-uri: "{baseUrl}/{action}/oauth2/{registrationId}"
-#            scope: profile_image, account_email
-#            client-name: kakao
-#        provider:
-#          kakao:
-#            authorization_uri: http://localhost:8890/oauth/login
-#            token_uri: http://localhost:8890/oauth/token
-#            user-info-uri: https://kapi.kakao.com/v2/user/me
-#            user_name_attribute: id
-
-server:
-  port: 8182
