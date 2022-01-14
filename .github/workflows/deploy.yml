@@ -1,14 +1,16 @@
-name: freelec-springboot2-webservice
+name: stringcat-webservice
 
 on:
   push:
     branches:
       - develop
-  workflow_dispatch: # 수동 실행
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      STRINGCAT_JASYPT_PASSWORD: ${{ secrets.STRINGCAT_JASYPT_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -48,8 +50,9 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: stringcat
-          environment_name: stringcat-env
+          application_name: stringcat-application
+          environment_name: Stringcatapplication-env
           version_label: github-action-${{steps.current-time.outputs.formattedTime}}
-          region: us-east-2
+          region: ap-northeast-2
           deployment_package: deploy/deploy.zip
+          wait_for_environment_recovery: 180

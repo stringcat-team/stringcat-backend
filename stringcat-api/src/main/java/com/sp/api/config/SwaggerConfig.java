@@ -1,13 +1,11 @@
 package com.sp.api.config;
 
-import com.sp.api.common.utils.SpringProfile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -22,58 +20,32 @@ import java.util.List;
 
 @EnableSwagger2
 @Configuration
-@Profile({SpringProfile.DEV, SpringProfile.LOCALDEV, SpringProfile.LOCAL})
 public class SwaggerConfig implements WebMvcConfigurer {
 
-    @Value("stringcat")
+    @Value("${swagger-info.title}")
     private String title;
 
-    @Value("stringcat REST API")
+    @Value("${swagger-info.description}")
     private String description;
 
-    @Value("1.0")
+    @Value("${swagger-info.version}")
     private String version;
 
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
-                .build()
-                .securityContexts(Collections.singletonList(securityContext()))
-                .securitySchemes(Collections.singletonList(apiKey()));
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                title,
-                description,
-                version,
-                "Terms of service",
-                new Contact("stringcat-be-api", " ", " "),
-                "Stringcat of API",
-                "API license URL",
-                Collections.emptyList());
-    }
-
-    private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header");
-    }
-
-    @Bean
-    public SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.any())
                 .build();
     }
 
-    public List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title(title)
+            .description(description)
+            .version(version)
+            .build();
     }
-
 }
