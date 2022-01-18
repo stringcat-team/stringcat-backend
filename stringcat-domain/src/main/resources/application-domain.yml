@@ -1,6 +1,6 @@
 jasypt:
   encryptor:
-    password: ENC(c3RyaW5nY2F0YmVwdyA=)
+    password: ENC(+VzfM0Fq71BnYNA2BN1SJVblumzsc7Wq)
 
 spring:
   datasource:
