@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Entity
+@Getter
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,9 +34,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(name = "social_id")
+    @Column(name = "social_type")
     @Enumerated(EnumType.STRING)
-    private SocialType socialId;
+    private SocialType socialType;
+
+    @Column(name = "social_id")
+    private String socialId;
 
     @Column
     private String email;

@@ -13,9 +13,9 @@ public class DatasourceConfig {
     public DataSource datasource() {
         return DataSourceBuilder.create()
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://heejeong-db.cv35wjiwae1x.ap-northeast-2.rds.amazonaws.com:3306/stringcat")
+                .url("jdbc:mysql://heejeong-database.cv35wjiwae1x.ap-northeast-2.rds.amazonaws.com:3306/stringcat")
                 .username("heejeong")
-                .password("MASTERDB1234")
+                .password("Stringcat-db")
                 .build();
     }
 }
