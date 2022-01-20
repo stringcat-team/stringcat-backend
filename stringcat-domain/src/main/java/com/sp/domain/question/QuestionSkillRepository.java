@@ -1,4 +1,4 @@
-package com.sp.domain.questionskill;
+package com.sp.domain.question;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

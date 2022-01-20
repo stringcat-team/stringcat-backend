@@ -1,9 +1,10 @@
-package com.sp.domain.questionskill;
+package com.sp.domain.question;
 
-import com.sp.domain.question.Question;
 import com.sp.domain.skill.Skill;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,11 +13,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@DynamicUpdate
-@DynamicInsert
-@Accessors(chain = true)
 @Table(name = "question_skill")
 public class QuestionSkill {
 
@@ -24,7 +24,7 @@ public class QuestionSkill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
@@ -38,4 +38,8 @@ public class QuestionSkill {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public QuestionSkill(Question question, Long skillId) {
+        this.question = question;
+        this.skill = new Skill().setId(skillId);
+    }
 }

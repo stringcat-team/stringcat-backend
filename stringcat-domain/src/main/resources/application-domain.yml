@@ -1,18 +1,22 @@
 jasypt:
   encryptor:
-    password: stringcatbepw
+    password: ${STRINGCAT_JASYPT_PASSWORD}
 
 spring:
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://heejeong-db.cv35wjiwae1x.ap-northeast-2.rds.amazonaws.com:3306/stringcat
-    username: heejeong
-    password: MASTERDB1234
+    url: ENC(Bxs5siyVbflkTlJbPQ9F03fGblpxBlbe/8nHcrQh3tZIsTXRMtXV0vVueZrbAYes1Xe+0cNnt1+NjhSEoJ4M0FWQsuOosCO/STe5ajF8h+BfQaCmKrapnWdmS/gyd1ommyAbupan56c=)
+    username: ENC(aopf5g+yPd/eaiTuDU4UPgbKhNLg5Pw0)
+    password: ENC(ZR4g1b+Y8x9pEDPVJlvpkddePuQbfdqW)
+    dbcp2:
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      validation-query: SELECT 1
 
-#  flyway:
-#    enabled: true
-#    baseline-on-migrate: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
   jpa:
     generate-ddl: false
     properties:
