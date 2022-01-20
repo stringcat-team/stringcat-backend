@@ -1,21 +1,22 @@
 package com.sp.domain.question;
 
 import com.sp.domain.user.User;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
-@DynamicUpdate
-@DynamicInsert
-@Accessors(chain = true)
 @Table(name = "question")
 public class Question {
 
@@ -45,4 +46,27 @@ public class Question {
     @Column
     private boolean deleted;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<QuestionSkill> questionSkills = new ArrayList<>();
+
+    public Question(User user, String title, String contents) {
+        this.user = user;
+        this.title = title;
+        this.contents = contents;
+    }
+
+    public void addQuestionSKills(List<QuestionSkill> questionSkills) {
+        this.questionSkills.addAll(questionSkills);
+    }
+
+    public void update(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
