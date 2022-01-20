@@ -12,7 +12,12 @@ import com.sp.domain.user.UserRepository;
 import com.sp.exception.type.StringcatCustomException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +27,14 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
-    private final SkillRepository skillRepository;
 
     @Transactional(readOnly = true)
     public List<QuestionResDto> getQuestions(QuestionReqDto.Search request) {
-        return null;
+        List<Question> questions = questionRepository.findAllQuestionByPage(request.toBrowser());
+
+        return questions.stream()
+            .map(QuestionResDto::of)
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -55,18 +63,18 @@ public class QuestionService {
     }
 
     private Question findQuestionById(Long questionId) {
-        Optional<Question> question = questionRepository.findById(questionId);
+        Question question = questionRepository.findQuestionById(questionId);
         validationQuestionIsNull(question);
-        return question.get();
+        return question;
     }
 
     private Question findQuestionByIdAndUserId(Long questionId, Long userId) {
-        Optional<Question> question = questionRepository.findByIdAndUserId(questionId, userId);
+        Question question = questionRepository.findQuestionByIdAndUserId(questionId, userId);
         validationQuestionIsNull(question);
-        return question.get();
+        return question;
     }
 
-    private void validationQuestionIsNull(Optional<Question> question) {
-        if(question.isEmpty()) throw new StringcatCustomException("존재하지 않는 질문 입니다.", NOT_FOUNT_QUESTION);
+    private void validationQuestionIsNull(Question question) {
+        if(question == null) throw new StringcatCustomException("존재하지 않는 질문 입니다.", NOT_FOUNT_QUESTION);
     }
 }

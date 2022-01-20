@@ -46,6 +46,7 @@ public class Question {
     @Column
     private boolean deleted;
 
+    @Builder.Default
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuestionSkill> questionSkills = new ArrayList<>();
 

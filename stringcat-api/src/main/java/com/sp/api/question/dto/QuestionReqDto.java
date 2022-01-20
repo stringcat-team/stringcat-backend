@@ -1,6 +1,7 @@
 package com.sp.api.question.dto;
 
 import com.sp.domain.question.Question;
+import com.sp.domain.question.QuestionBrowser;
 import com.sp.domain.question.QuestionSkill;
 import com.sp.domain.skill.Skill;
 import com.sp.domain.user.User;
@@ -27,6 +28,10 @@ public class QuestionReqDto {
         private String sort;
 
         private List<Long> skills;
+
+        public QuestionBrowser toBrowser() {
+            return new QuestionBrowser(keyword, condition, cursor, size, sort, skills);
+        }
     }
 
     @Data
