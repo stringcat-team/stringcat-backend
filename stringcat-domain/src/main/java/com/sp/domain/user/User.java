@@ -53,6 +53,9 @@ public class User {
     @Column
     private String github;
 
+    @Column
+    private int score;
+
     @Column(columnDefinition = "TEXT")
     private String bio;
 

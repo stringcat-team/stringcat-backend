@@ -27,6 +27,19 @@ public class UserReqDto {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    @ApiModel("User Search")
+    public static class Search {
 
+        @ApiModelProperty(value = "사용자 닉네임", example = "stringcat")
+        private String nickname;
+
+        @ApiModelProperty(value = "기술명", example = "java")
+        private String skill;
+
+    }
 
 }
