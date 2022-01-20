@@ -4,16 +4,15 @@ import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.grade.Grade;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 @Builder
 @Entity
+@Getter
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,9 +32,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(name = "social_id")
+    @Column(name = "social_type")
     @Enumerated(EnumType.STRING)
-    private SocialType socialId;
+    private SocialType socialType;
+
+    @Column(name = "social_id")
+    private String socialId;
 
     @Column
     private String email;
@@ -48,6 +50,9 @@ public class User {
 
     @Column
     private String github;
+
+    @Column
+    private int score;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
