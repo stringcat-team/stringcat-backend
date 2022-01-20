@@ -1,6 +1,6 @@
-package com.sp.api.user;
+package com.sp.api.user.service;
 
-import com.sp.api.auth.AuthReqDto;
+import com.sp.api.auth.dto.AuthReqDto;
 import com.sp.api.common.exception.ApiException;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;

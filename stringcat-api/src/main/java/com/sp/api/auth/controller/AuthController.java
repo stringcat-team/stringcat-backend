@@ -1,10 +1,12 @@
-package com.sp.api.auth;
+package com.sp.api.auth.controller;
 
+import com.sp.api.auth.dto.AuthReqDto;
+import com.sp.api.auth.dto.AuthResDto;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.common.exception.ApiException;
-import com.sp.api.user.UserService;
+import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +42,18 @@ public class AuthController {
 
         userService.register(request);
 
+        return ApiResponse.success(new AuthResDto());
+    }
+
+    @ApiOperation(value = "GOOGLE LOGIN", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @PostMapping("/google")
+    public ApiResponse<AuthResDto> google(@RequestBody AuthReqDto.Social request) {
+        return ApiResponse.success(new AuthResDto());
+    }
+
+    @ApiOperation(value = "GITHUB LOGIN", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @PostMapping("/github")
+    public ApiResponse<AuthResDto> github(@RequestBody AuthReqDto.Social request) {
         return ApiResponse.success(new AuthResDto());
     }
 

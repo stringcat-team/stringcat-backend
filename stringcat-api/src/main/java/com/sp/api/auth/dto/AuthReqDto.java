@@ -1,4 +1,4 @@
-package com.sp.api.auth;
+package com.sp.api.auth.dto;
 
 import com.sp.domain.skill.Skill;
 import io.swagger.annotations.ApiModel;
@@ -49,7 +49,7 @@ public class AuthReqDto {
         @NotEmpty(message = "비밀번호를 확인해주세요..")
         private String password2;
 
-        @ApiModelProperty(value = "기술 스택", example = "")
+        @ApiModelProperty(value = "기술 스택", example = " ")
         private List<Skill> skills;
 
         @ApiModelProperty(value = "한줄 소개", example = "자신을 한줄로 소개해주세요.")
@@ -67,4 +67,6 @@ public class AuthReqDto {
     public static class Social {
         private String accessToken;
     }
+
+
 }

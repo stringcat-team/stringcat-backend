@@ -1,13 +1,13 @@
 jasypt:
   encryptor:
-    password: ENC(+VzfM0Fq71BnYNA2BN1SJVblumzsc7Wq)
+    password: ENC(5wsGM1Le3Y+d+wSCetOgcGLsBVxwsv+/)
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(amRiYzpteXNxbDovL2hlZWplb25nLWRhdGFiYXNlLmN2MzV3aml3YWUxeC5hcC1ub3J0aGVhc3QtMi5yZHMuYW1hem9uYXdzLmNvbTozMzA2L3N0cmluZ2NhdD9hdXRvUmVjb25uZWN0PXRydWU=)
-    username: ENC(aGVlamVvbmc=)
-    password: ENC(U3RyaW5nY2F0LWRi)
+    url: jdbc:mysql://heejeong-database.cv35wjiwae1x.ap-northeast-2.rds.amazonaws.com:3306/stringcat
+    username: ENC(0It55Vq3mgNLXKWge1mGIRdpChXqRpUF)
+    password: ENC(2WmwqT7fTx5hHOPWVPBz66Xy9uSlJ/0u)
     dbcp2:
       test-while-idle: true
       time-between-eviction-runs-millis: 60000
