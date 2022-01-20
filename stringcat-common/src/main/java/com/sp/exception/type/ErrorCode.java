@@ -22,6 +22,7 @@ public enum ErrorCode {
 
     // 404 Not Found
     NOT_FOUND(HttpStatusCode.NOT_FOUND, "NF01", "존재하지 않습니다."),
+    NOT_FOUNT_QUESTION(HttpStatusCode.NOT_FOUND, "NF02", "존재하지 않는 질문입니다."),
 
     // 409 Conflict
     CONFLICT_EXCEPTION(CONFLICT,  "CF01","이미 존재합니다."),
