@@ -4,6 +4,7 @@ import com.sp.domain.question.Question;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class QuestionResDto {
     private List<String> skills;
 
     public static QuestionResDto of(Question question) {
+        /*
+        미구현 목록 : likeCount, hateCount, likePushed, hatePushed, commentCount
+        */
         return new QuestionResDto()
             .setQuestionId(question.getId())
             .setUserId(question.getUser().getId())
@@ -42,6 +46,8 @@ public class QuestionResDto {
             .setHatePushed(false)
             .setCommentCount(0)
             .setCreateAt(question.getCreatedAt())
-            .setSkills(new ArrayList<>());
+            .setSkills(question.getQuestionSkills().stream()
+                .map(questionSkill -> questionSkill.getSkill().getName())
+                .collect(Collectors.toUnmodifiableList()));
     }
 }
