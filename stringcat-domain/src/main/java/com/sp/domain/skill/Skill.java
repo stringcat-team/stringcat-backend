@@ -8,13 +8,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "skill")
 public class Skill {
 

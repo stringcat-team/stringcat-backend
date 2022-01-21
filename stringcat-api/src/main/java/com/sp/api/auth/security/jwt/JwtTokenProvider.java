@@ -3,6 +3,7 @@ package com.sp.api.auth.security.jwt;
 import com.sp.domain.code.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,11 +20,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private final String JWT_SECRET_KEY = "stringcat-authorization-jwt-token-secret-key";
     private final int JWT_EXPIRATIONS_MS = 604800000;
-
     private final Key key;
 
     public JwtTokenProvider() {
