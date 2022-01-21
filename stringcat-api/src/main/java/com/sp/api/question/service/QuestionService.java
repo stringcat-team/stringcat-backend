@@ -53,7 +53,7 @@ public class QuestionService {
     @Transactional
     public void updateQuestion(Long userId, Long questionId, QuestionReqDto.Update request) {
         Question question = findQuestionByIdAndUserId(questionId, userId);
-        question.update(request.getTitle(), request.getContents());
+        question.update(request.getTitle(), request.getContents(), request.toSkills(question));
     }
 
     @Transactional

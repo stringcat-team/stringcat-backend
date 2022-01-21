@@ -62,5 +62,14 @@ public class QuestionReqDto {
         private String title;
         private String contents;
         private List<Long> skills;
+
+        public List<QuestionSkill> toSkills(Question question) {
+            return skills.stream()
+                .map(skillId -> QuestionSkill.builder()
+                    .question(question)
+                    .skill(new Skill().setId(skillId))
+                    .build())
+                .collect(Collectors.toList());
+        }
     }
 }

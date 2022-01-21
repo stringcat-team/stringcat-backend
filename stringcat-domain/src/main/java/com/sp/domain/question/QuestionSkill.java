@@ -1,6 +1,7 @@
 package com.sp.domain.question;
 
 import com.sp.domain.skill.Skill;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,19 @@ public class QuestionSkill {
     public QuestionSkill(Question question, Long skillId) {
         this.question = question;
         this.skill = new Skill().setId(skillId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(skill.getId(), question.getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+        QuestionSkill questionSkill = (QuestionSkill) obj;
+        return Objects.equals(skill.getId(), questionSkill.getSkill().getId())
+            && Objects.equals(question.getId(), questionSkill.getQuestion().getId());
     }
 }
