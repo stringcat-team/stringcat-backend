@@ -5,7 +5,6 @@ import com.sp.domain.question.QuestionBrowser;
 import com.sp.domain.question.QuestionSkill;
 import com.sp.domain.skill.Skill;
 import com.sp.domain.user.User;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -67,7 +66,7 @@ public class QuestionReqDto {
             return skills.stream()
                 .map(skillId -> QuestionSkill.builder()
                     .question(question)
-                    .skill(new Skill().setId(skillId))
+                    .skill(Skill.builder().id(skillId).build())
                     .build())
                 .collect(Collectors.toList());
         }

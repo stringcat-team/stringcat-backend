@@ -2,6 +2,7 @@ package com.sp.domain.question;
 
 import com.sp.domain.skill.Skill;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Getter
+@DynamicUpdate
+@DynamicInsert
+@Accessors(chain = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "question_skill")
 public class QuestionSkill {
 
@@ -29,7 +33,7 @@ public class QuestionSkill {
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 
@@ -41,7 +45,7 @@ public class QuestionSkill {
 
     public QuestionSkill(Question question, Long skillId) {
         this.question = question;
-        this.skill = new Skill().setId(skillId);
+        this.skill = Skill.builder().id(skillId).build();
     }
 
     @Override

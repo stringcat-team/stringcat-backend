@@ -1,8 +1,7 @@
 package com.sp.domain.commentreply;
 
 import com.sp.domain.comment.Comment;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -10,12 +9,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Builder
 @Entity
+@Getter
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "comment_reply")
 public class CommentReply {
 

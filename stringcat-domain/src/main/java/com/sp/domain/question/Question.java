@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity
 @Table(name = "question")
 public class Question {
 
@@ -47,9 +45,8 @@ public class Question {
     @Column
     private boolean deleted;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<QuestionSkill> questionSkills = new ArrayList<>();
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<QuestionSkill> questionSkills = new ArrayList<>();
 
     public Question(User user, String title, String contents) {
         this.user = user;
