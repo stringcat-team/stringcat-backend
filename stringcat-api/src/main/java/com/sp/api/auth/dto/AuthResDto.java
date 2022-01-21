@@ -1,4 +1,4 @@
-package com.sp.api.auth;
+package com.sp.api.auth.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

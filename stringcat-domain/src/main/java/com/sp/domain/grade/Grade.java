@@ -1,8 +1,7 @@
 package com.sp.domain.grade;
 
 import com.sp.domain.code.GradeRange;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,10 +10,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@Builder
 @Entity
 @DynamicUpdate
 @DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Accessors(chain = true)
 @Table(name = "grade")
 public class Grade {
