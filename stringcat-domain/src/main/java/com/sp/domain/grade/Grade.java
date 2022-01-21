@@ -9,14 +9,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
 @Entity
+@Getter
 @DynamicUpdate
 @DynamicInsert
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Accessors(chain = true)
 @Table(name = "grade")
 public class Grade {
 

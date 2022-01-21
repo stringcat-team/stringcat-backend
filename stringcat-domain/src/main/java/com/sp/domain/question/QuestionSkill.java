@@ -1,10 +1,7 @@
 package com.sp.domain.question;
 
 import com.sp.domain.skill.Skill;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,11 +9,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Getter
+@DynamicUpdate
+@DynamicInsert
+@Accessors(chain = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "question_skill")
 public class QuestionSkill {
 
