@@ -45,19 +45,19 @@ public class AuthController {
         return ApiResponse.success(new AuthResDto());
     }
 
-    @ApiOperation(value = "GOOGLE LOGIN", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @ApiOperation(value = "GOOGLE 로그인 API", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
     public ApiResponse<AuthResDto> google(@RequestBody AuthReqDto.Social request) {
         return ApiResponse.success(new AuthResDto());
     }
 
-    @ApiOperation(value = "GITHUB LOGIN", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @ApiOperation(value = "GITHUB 로그인 API", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
     public ApiResponse<AuthResDto> github(@RequestBody AuthReqDto.Social request) {
         return ApiResponse.success(new AuthResDto());
     }
 
-    @ApiOperation(value = "KAKAO LOGIN", notes = "카카오 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @ApiOperation(value = "KAKAO 로그인 API", notes = "카카오 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/kakao")
     public ApiResponse<AuthResDto> kakao(@RequestBody AuthReqDto.Social request) {
         return ApiResponse.success(new AuthResDto());

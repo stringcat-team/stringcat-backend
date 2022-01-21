@@ -10,9 +10,10 @@ public class SkillResDto {
     @Data
     @NoArgsConstructor
     @Accessors(chain = true)
-    @ApiModel("Skill명 전체조회")
-    public static class Fetch {
+    @ApiModel("Basic SkillInfo")
+    public static class SkillInfo {
         private Long id;
         private String name;
     }
+
 }

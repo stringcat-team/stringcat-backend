@@ -2,7 +2,11 @@ package com.sp.api.user.service;
 
 import com.sp.api.auth.dto.AuthReqDto;
 import com.sp.api.common.exception.ApiException;
+import com.sp.api.grade.service.GradeService;
+import com.sp.api.skill.dto.SkillResDto;
+import com.sp.api.user.dto.UserResDto;
 import com.sp.domain.code.UserRole;
+import com.sp.domain.skill.Skill;
 import com.sp.domain.user.User;
 import com.sp.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final GradeService gradeService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -51,4 +56,5 @@ public class UserService {
 
         newUser = userRepository.save(newUser);
     }
+
 }

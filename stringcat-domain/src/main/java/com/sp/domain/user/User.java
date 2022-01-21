@@ -4,12 +4,10 @@ import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.grade.Grade;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 @Builder

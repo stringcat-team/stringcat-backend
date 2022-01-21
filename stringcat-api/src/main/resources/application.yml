@@ -3,13 +3,14 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: stringcat.be@gmail.com
-    password:
+    password: ENC(N2X2DlV4sz18ywREWBh/8jkx8GZxwWOa)
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+            required: true
   profiles:
     active: local
     default: local

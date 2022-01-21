@@ -45,8 +45,8 @@ public class SkillService {
         return skillRepository.findAll();
     }
 
-    public SkillResDto.Fetch toEntity(Skill skill) {
-        return new SkillResDto.Fetch()
+    public SkillResDto.SkillInfo toEntity(Skill skill) {
+        return new SkillResDto.SkillInfo()
                 .setId(skill.getId())
                 .setName(skill.getName());
     }

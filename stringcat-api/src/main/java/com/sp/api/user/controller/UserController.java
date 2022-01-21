@@ -17,13 +17,10 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
-    //회원 조회
-
-
     //회원 수정
     @ApiOperation(value = "회원 정보 수정 API")
     @PatchMapping("/update/{id}")
-    public ApiResponse update(@Valid @RequestBody UserReqDto.UserInfo request) {
+    public ApiResponse<UserResDto.UserInfo> update(@Valid @RequestBody UserReqDto.UserInfo request) {
         return ApiResponse.success(new UserResDto.UserInfo());
     }
 
