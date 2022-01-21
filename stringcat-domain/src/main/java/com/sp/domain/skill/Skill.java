@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicUpdate
 @DynamicInsert
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "skill")
