@@ -40,6 +40,8 @@ public class QuestionSkill {
 
     public QuestionSkill(Question question, Long skillId) {
         this.question = question;
-        this.skill = new Skill().setId(skillId);
+        this.skill = this.skill = Skill.builder()
+                .id(skillId)
+                .build();
     }
 }
