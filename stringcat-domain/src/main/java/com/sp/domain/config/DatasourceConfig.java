@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+@Deprecated
 @Configuration
 public class DatasourceConfig {
 
