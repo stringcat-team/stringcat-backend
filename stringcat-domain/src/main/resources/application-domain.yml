@@ -3,6 +3,11 @@ jasypt:
     password: ${STRINGCAT_JASYPT_PASSWORD}
 
 spring:
+  redis:
+    host: 61.97.185.103
+    port: 6379
+    password: stringcatcache1234
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ENC(Bxs5siyVbflkTlJbPQ9F03fGblpxBlbe/8nHcrQh3tZIsTXRMtXV0vVueZrbAYes1Xe+0cNnt1+NjhSEoJ4M0FWQsuOosCO/STe5ajF8h+BfQaCmKrapnWdmS/gyd1ommyAbupan56c=)
