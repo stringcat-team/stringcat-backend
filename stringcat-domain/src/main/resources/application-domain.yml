@@ -4,9 +4,9 @@ jasypt:
 
 spring:
   redis:
-    host: 61.97.185.103
+    host: ENC(o0myDnyKQR6PiWqhy131uAY8vm0B6I8Z)
     port: 6379
-    password: stringcatcache1234
+    password: ENC(bCYa8IT/cjVHeb58zZPCnPytv5gAFnV0k44k7lAkDPU=)
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
