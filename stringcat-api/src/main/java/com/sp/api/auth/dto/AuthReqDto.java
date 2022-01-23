@@ -4,6 +4,7 @@ import com.sp.domain.skill.Skill;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -15,6 +16,7 @@ public class AuthReqDto {
     @Data
     @Accessors(chain = true)
     @NoArgsConstructor
+    @EqualsAndHashCode
     @ApiModel("Id Password Login")
     public static class Login {
 
@@ -25,6 +27,7 @@ public class AuthReqDto {
         @ApiModelProperty(value = "비밀번호", example = "Stringcat!", required = true)
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         private String password;
+
     }
 
     @Data

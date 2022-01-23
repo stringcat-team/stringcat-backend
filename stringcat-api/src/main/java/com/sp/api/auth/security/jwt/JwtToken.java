@@ -2,6 +2,7 @@ package com.sp.api.auth.security.jwt;
 
 import com.sp.domain.code.UserRole;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;

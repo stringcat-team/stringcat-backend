@@ -12,6 +12,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +33,34 @@ public class AuthController {
     private final UserService userService;
     private final JwtTokenProvider tokenProvider;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @ApiOperation(value = "일반 로그인 API", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
     @PostMapping("/login")
     public ApiResponse<JwtToken> login(@RequestBody AuthReqDto.Login request) {
-        User user = userService.findByEmail(request.getEmail())
+
+        log.info("사용자 일반 로그인 REQ :: {}", request.toString());
+
+        User user = userService.findByEmailAndDeletedFalse(request.getEmail())
                 .orElseThrow(() -> new ApiException("존재하지 않는 Email 입니다."));
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new ApiException("비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.");
+        }
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(), request.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        log.info("TOKE :: {}", tokenProvider.generateToken(user.getSocialId(), user.getRole()));
 
         return ApiResponse.success(tokenProvider.generateToken(user.getSocialId(), user.getRole()));
     }
@@ -70,4 +99,5 @@ public class AuthController {
         return ApiResponse.success(new AuthResDto());
     }
 
+    //make response 만들기
 }
