@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;

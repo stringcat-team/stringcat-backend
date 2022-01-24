@@ -4,6 +4,7 @@ import com.sp.api.auth.dto.AuthReqDto;
 import com.sp.api.auth.dto.AuthResDto;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
+import com.sp.api.auth.service.AuthService;
 import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.common.exception.ApiException;
 import com.sp.api.user.service.UserService;
@@ -30,6 +31,7 @@ import javax.validation.Valid;
 @Api(value = "AuthController - 인증 관련 API")
 public class AuthController {
 
+    private final AuthService authService;
     private final UserService userService;
     private final JwtTokenProvider tokenProvider;
 
@@ -42,8 +44,6 @@ public class AuthController {
     @ApiOperation(value = "일반 로그인 API", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
     @PostMapping("/login")
     public ApiResponse<JwtToken> login(@RequestBody AuthReqDto.Login request) {
-
-        log.info("사용자 일반 로그인 REQ :: {}", request.toString());
 
         User user = userService.findByEmailAndDeletedFalse(request.getEmail())
                 .orElseThrow(() -> new ApiException("존재하지 않는 Email 입니다."));
@@ -58,11 +58,13 @@ public class AuthController {
                 )
         );
 
+        JwtToken accessToken = tokenProvider.generateToken(user.getSocialId(), user.getRole());
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         log.info("TOKE :: {}", tokenProvider.generateToken(user.getSocialId(), user.getRole()));
 
-        return ApiResponse.success(tokenProvider.generateToken(user.getSocialId(), user.getRole()));
+        return ApiResponse.success(accessToken);
     }
 
     @ApiOperation(value = "일반 회원가입 API", notes = "소셜 로그인이 아닌 일반 회원가입")
@@ -71,33 +73,40 @@ public class AuthController {
 
         userService.register(request);
 
-        return ApiResponse.success(new AuthResDto());
+        return ApiResponse.success(new AuthResDto.AuthRes());
     }
 
     @ApiOperation(value = "GOOGLE 로그인 API", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
-    public ApiResponse<AuthResDto> google(@RequestBody AuthReqDto.Social request) {
-        return ApiResponse.success(new AuthResDto());
+    public ApiResponse<AuthResDto.AuthRes> google(@RequestBody AuthReqDto.Social request) {
+
+        AuthResDto.AuthRes res = authService.googleLogin(request);
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "GITHUB 로그인 API", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
-    public ApiResponse<AuthResDto> github(@RequestBody AuthReqDto.Social request) {
-        return ApiResponse.success(new AuthResDto());
+    public ApiResponse<AuthResDto.AuthRes> github(@RequestBody AuthReqDto.Social request) {
+
+        AuthResDto.AuthRes res = authService.githubLogin(request);
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "KAKAO 로그인 API", notes = "카카오 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/kakao")
-    public ApiResponse<AuthResDto> kakao(@RequestBody AuthReqDto.Social request) {
-        return ApiResponse.success(new AuthResDto());
+    public ApiResponse<AuthResDto.AuthRes> kakao(@RequestBody AuthReqDto.Social request) {
+
+        AuthResDto.AuthRes res = authService.kakaoLogin(request);
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "토큰 갱신", notes = "애플리케이션 토큰 갱신")
-    @PostMapping("/refresh")
-    public ApiResponse<AuthResDto> refreshToken(HttpServletRequest request) {
+    @GetMapping("/refresh")
+    public ApiResponse<AuthResDto.AuthRes> refreshToken(HttpServletRequest request) {
 
-        return ApiResponse.success(new AuthResDto());
+        return ApiResponse.success(new AuthResDto.AuthRes());
     }
-
-    //make response 만들기
 }
