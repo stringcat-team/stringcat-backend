@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class StringcatApiApplicationTests {
 
-    @Test
+/*    @Test
     void contextLoads() {
-    }
+    }*/
 
 }
