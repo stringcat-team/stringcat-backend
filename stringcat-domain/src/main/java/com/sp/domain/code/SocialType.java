@@ -9,7 +9,8 @@ public enum SocialType {
 
     GOOGLE("GOOGLE", "구글", true),
     KAKAO("KAKAO", "카카오", true),
-    GITHUB("GITHUB", "깃허브", true);
+    GITHUB("GITHUB", "깃허브", true),
+    NONE("NONE", "일반", true);
 
     private final String socialId;
     private final String desc;

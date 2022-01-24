@@ -2,6 +2,8 @@ package com.sp.api.auth.security.jwt;
 
 import com.sp.domain.code.UserRole;
 import io.jsonwebtoken.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;
@@ -10,6 +12,7 @@ import java.util.Date;
 @Slf4j
 public class JwtToken {
 
+    @Getter
     private final String token;
     private final Key key;
 
@@ -29,6 +32,7 @@ public class JwtToken {
         return Jwts.builder()
                 .setSubject(socialId)
                 .claim(AUTH_KEY, role)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expired)
                 .compact();
     }

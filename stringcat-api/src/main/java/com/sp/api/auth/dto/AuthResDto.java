@@ -1,13 +1,24 @@
 package com.sp.api.auth.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
-@Data
-@NoArgsConstructor
-@Accessors(chain = true)
 public class AuthResDto {
-    private String accessToken;
-    private boolean isNewMember;
+
+    @Data
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class AuthRes {
+        private String accessToken;
+        private boolean isNewMember;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    public static class OauthRes {
+        private String email;
+        private String socialId;
+    }
 }

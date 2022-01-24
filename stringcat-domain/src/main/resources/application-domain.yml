@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(Bxs5siyVbflkTlJbPQ9F03fGblpxBlbe/8nHcrQh3tZIsTXRMtXV0vVueZrbAYes1Xe+0cNnt1+NjhSEoJ4M0FWQsuOosCO/STe5ajF8h+BfQaCmKrapnWdmS/gyd1ommyAbupan56c=)
-    username: ENC(aopf5g+yPd/eaiTuDU4UPgbKhNLg5Pw0)
-    password: ENC(ZR4g1b+Y8x9pEDPVJlvpkddePuQbfdqW)
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     dbcp2:
       test-while-idle: true
       time-between-eviction-runs-millis: 60000
