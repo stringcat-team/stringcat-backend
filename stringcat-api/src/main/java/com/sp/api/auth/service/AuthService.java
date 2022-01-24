@@ -21,10 +21,8 @@ public class AuthService {
     private final GithubClient githubClient;
     private final KakaoClient kakaoClient;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Autowired UserRepository userRepository;
-
-    @Autowired UserQuerydslRepository userQuerydslRepository;
+    private final UserRepository userRepository;
+    private final UserQuerydslRepository userQuerydslRepository;
 
     @Transactional
     public AuthResDto.AuthRes googleLogin(AuthReqDto.Social request) {
