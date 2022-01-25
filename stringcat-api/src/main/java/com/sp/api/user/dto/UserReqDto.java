@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserReqDto {
 
     @Data
@@ -39,6 +41,23 @@ public class UserReqDto {
 
         @ApiModelProperty(value = "기술명", example = "java")
         private String skill;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    @ApiModel("Password Check")
+    public static class PasswordCheck {
+
+        @ApiModelProperty(value = "비밀번호", example = "stringcat12", required = true)
+        @NotEmpty(message = "비밀번호를 입력해야합니다.")
+        private String password;
+
+        @ApiModelProperty(value = "비밀번호", example = "stringcat12", required = true)
+        @NotEmpty(message = "비밀번호를 입력해야합니다.")
+        private String password2;
 
     }
 

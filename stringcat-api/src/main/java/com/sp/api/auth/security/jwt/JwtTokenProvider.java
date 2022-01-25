@@ -37,6 +37,10 @@ public class JwtTokenProvider {
         return new JwtToken(socialId, userRole, expiredDate, key);
     }
 
+    public JwtToken generateNewToken(String socialId) {
+        return generateToken(socialId, UserRole.USER);
+    }
+
     public JwtToken convertStringToJwtToken(String token) {
         return new JwtToken(token, key);
     }

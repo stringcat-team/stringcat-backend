@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserQuerydslRepository {
@@ -13,10 +15,12 @@ public class UserQuerydslRepository {
 
     @Transactional
     public User findBySocialId(String socialId) {
+
         return queryFactory
                 .selectFrom(QUser.user)
                 .where(QUser.user.socialId.eq(socialId))
                 .fetchOne();
+
     }
 
 
