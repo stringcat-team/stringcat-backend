@@ -1,32 +1,4 @@
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 604487308809-7dj190vf7ab9po4k7qp79pmokshaopbf.apps.googleusercontent.com
-            client-secret: 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
-            scope:
-              - email
-          github:
-            client-id: 5e31d0738a782e1443b4
-            client-secret: a7328eb16d4bc4141ac23bc8698b7e4bd8f39288
-            scope:
-              - email
-          kakao:
-            authorization-grant-type: authorization_code
-            client-id: cdcbce63806f6483ae54d2083e234da1
-            scope:
-              - account_email
-            client-authentication-method: POST
-            client-name: Kakao
-        provider:
-          kakao:
-            authorizationUri: https://kauth.kakao.com/oauth/authorize
-            tokenUri: https://kauth.kakao.com/oauth/token
-            userInfoUri: https://kapi.kakao.com/v2/user/me
-            userNameAttribute: id
-
   mail:
     host: smtp.gmail.com
     port: 587
