@@ -2,6 +2,7 @@ package com.sp.api.auth.controller;
 
 import com.sp.api.auth.dto.AuthReqDto;
 import com.sp.api.auth.dto.AuthResDto;
+import com.sp.api.auth.security.jwt.JwtHeader;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
@@ -9,6 +10,7 @@ import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.common.exception.ApiException;
 import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
+import com.sp.exception.type.ErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +29,17 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = "/auth")
-@RequiredArgsConstructor
 @Api(value = "AuthController - 인증 관련 API")
 public class AuthController {
 
-    private final AuthService authService;
-    private final UserService userService;
-    private final JwtTokenProvider tokenProvider;
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -79,34 +85,39 @@ public class AuthController {
     @ApiOperation(value = "GOOGLE 로그인 API", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
     public ApiResponse<AuthResDto.AuthRes> google(@RequestBody AuthReqDto.Social request) {
-
-        AuthResDto.AuthRes res = authService.googleLogin(request);
-
-        return ApiResponse.success(res);
+        return ApiResponse.success(authService.googleLogin(request));
     }
 
     @ApiOperation(value = "GITHUB 로그인 API", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
     public ApiResponse<AuthResDto.AuthRes> github(@RequestBody AuthReqDto.Social request) {
-
-        AuthResDto.AuthRes res = authService.githubLogin(request);
-
-        return ApiResponse.success(res);
+        return ApiResponse.success(authService.githubLogin(request));
     }
 
     @ApiOperation(value = "KAKAO 로그인 API", notes = "카카오 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/kakao")
     public ApiResponse<AuthResDto.AuthRes> kakao(@RequestBody AuthReqDto.Social request) {
 
-        AuthResDto.AuthRes res = authService.kakaoLogin(request);
-
-        return ApiResponse.success(res);
+        log.info("kakao REQ 성공 :: {} ", request.toString());
+        return ApiResponse.success(authService.kakaoLogin(request));
     }
 
     @ApiOperation(value = "토큰 갱신", notes = "애플리케이션 토큰 갱신")
     @GetMapping("/refresh")
     public ApiResponse<AuthResDto.AuthRes> refreshToken(HttpServletRequest request) {
+        String accessToken = JwtHeader.getAccessToke(request);
+        JwtToken jwtToken = tokenProvider.convertStringToJwtToken(accessToken);
 
-        return ApiResponse.success(new AuthResDto.AuthRes());
+        if(!jwtToken.validate()) {
+            return ApiResponse.error(ErrorCode.FORBIDDEN_EXCEPTION);
+        }
+
+        AuthResDto.AuthRes authRes = authService.updateToken(jwtToken);
+
+        if(authRes == null) {
+            return ApiResponse.error(ErrorCode.FORBIDDEN_EXCEPTION);
+        }
+
+        return ApiResponse.success(authRes);
     }
 }

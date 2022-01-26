@@ -1,5 +1,6 @@
-package com.sp.api.auth.dto;
+package com.sp.api.auth.service;
 
+import com.sp.api.auth.dto.AuthResDto;
 import com.sp.api.common.exception.ApiException;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;

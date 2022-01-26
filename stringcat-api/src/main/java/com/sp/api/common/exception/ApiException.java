@@ -1,17 +1,21 @@
 package com.sp.api.common.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class ApiException extends RuntimeException {
 
     private String status;
     private String message;
 
     public ApiException() {
-        super();
+        super("Exception!");
     }
 
     public ApiException(String message) {
         super(message);
-        this.status = "error";
     }
 
     public ApiException(String status, String message) {

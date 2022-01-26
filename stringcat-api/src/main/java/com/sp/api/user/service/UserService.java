@@ -25,7 +25,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final GradeService gradeService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 

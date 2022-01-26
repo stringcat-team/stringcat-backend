@@ -1,4 +1,4 @@
-package com.sp.api.auth.dto;
+package com.sp.api.auth.service;
 
 import com.sp.domain.user.User;
 

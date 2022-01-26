@@ -1,5 +1,6 @@
-package com.sp.api.auth.dto;
+package com.sp.api.auth.service;
 
+import com.sp.api.auth.dto.AuthResDto;
 import com.sp.api.common.exception.ApiException;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
@@ -24,7 +25,7 @@ public class GithubClient implements ClientProxy {
                 .uri("https://github.com/login/oauth/access_token")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ApiException("Access token is unauthorized")))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ApiException()))
                 .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new ApiException("Internal Server Error")))
                 .bodyToMono(AuthResDto.OauthRes.class)
                 .block();

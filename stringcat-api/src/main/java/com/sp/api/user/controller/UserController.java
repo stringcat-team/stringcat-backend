@@ -34,10 +34,8 @@ public class UserController {
     //비밀번호 확인 API
     @ApiOperation(value = "비밀번호 확인 API", notes = "회원 수정 또는 회원 탈퇴 시 비밀번호 확인 후 넘어감")
     @PostMapping("/check")
-    public ApiResponse<String> checkPassword(@Valid @ModelAttribute String request) {
+    public ApiResponse<String> checkPassword(@Valid @RequestBody UserReqDto.PasswordCheck request) {
         return ApiResponse.success("OK");
     }
-
-
 
 }

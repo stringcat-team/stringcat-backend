@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
     public String code;
-    private String message;
-    private T data;
+    public String message;
+    public T data;
 
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>("", "", data);
