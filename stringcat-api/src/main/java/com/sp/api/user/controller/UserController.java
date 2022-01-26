@@ -44,6 +44,7 @@ public class UserController {
     @PostMapping("/{id}/verify/password")
     public ApiResponse<Boolean> checkPassword(@PathVariable("id") Long id,
                                               @RequestBody UserReqDto.PasswordCheck request) {
+
         log.info("비밀번호 확인 REQ :: {}", id.toString());
 
         boolean response = userService.isMatchedPassword(id, request.getPassword());
@@ -51,6 +52,7 @@ public class UserController {
         log.info("비밀번호 확인 RES :: {}", response);
 
         return ApiResponse.success(response);
+
     }
 
 }

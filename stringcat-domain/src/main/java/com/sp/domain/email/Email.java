@@ -39,10 +39,16 @@ public class Email {
     @Column
     private boolean expired;
 
+    @Column(name = "expired_at")
+    private LocalDateTime expiredAt;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public void usedToken() {
+        expired = true;
+    }
 }

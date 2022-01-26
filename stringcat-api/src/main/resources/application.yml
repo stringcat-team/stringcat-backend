@@ -11,6 +11,9 @@ spring:
           starttls:
             enable: true
             required: true
+          connectionTimeout: 5000
+          timeout: 5000
+          writeTimeout: 5000
   profiles:
     active: local
     default: local
