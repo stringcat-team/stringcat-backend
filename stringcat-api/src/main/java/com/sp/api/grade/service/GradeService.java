@@ -1,9 +1,10 @@
 package com.sp.api.grade.service;
 
-import com.sp.api.common.exception.ApiException;
 import com.sp.api.grade.dto.GradeResDto;
 import com.sp.domain.grade.Grade;
 import com.sp.domain.grade.GradeRepository;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class GradeService {
     public Grade getById(Long id) {
         return findById(id)
                 .orElseThrow(() -> {
-                    throw new ApiException("없는 등급입니다.");
+                    throw new StringcatCustomException("없는 등급입니다.", ErrorCode.NOT_FOUND);
                 });
     }
 

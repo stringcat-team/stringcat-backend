@@ -55,10 +55,6 @@ public class UserReqDto {
         @NotEmpty(message = "비밀번호를 입력해야합니다.")
         private String password;
 
-        @ApiModelProperty(value = "비밀번호", example = "stringcat12", required = true)
-        @NotEmpty(message = "비밀번호를 입력해야합니다.")
-        private String password2;
-
     }
 
 }
