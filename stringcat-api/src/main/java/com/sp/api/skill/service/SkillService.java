@@ -1,10 +1,11 @@
 package com.sp.api.skill.service;
 
-import com.sp.api.common.exception.ApiException;
 import com.sp.api.skill.dto.SkillReqDto;
 import com.sp.api.skill.dto.SkillResDto;
 import com.sp.domain.skill.Skill;
 import com.sp.domain.skill.SkillRepository;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class SkillService {
         Optional<Skill> nullCheck = findByName(request.getName());
 
         if(!nullCheck.isEmpty()) {
-            throw new ApiException("이미 존재하는 값입니다.");
+            throw new StringcatCustomException("이미 존재하는 값입니다.", ErrorCode.CONFLICT_EXCEPTION);
         }
 
         Skill skill = Skill.builder()

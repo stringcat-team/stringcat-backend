@@ -20,11 +20,11 @@ public class AuthReqDto {
     @ApiModel("Id Password Login")
     public static class Login {
 
-        @ApiModelProperty(value = "사용자 이메일", example = "stringcat@gmail.com", required = true)
+        @ApiModelProperty(value = "사용자 이메일", example = "stringcat-test@test.com", required = true)
         @NotEmpty(message = "이메일을 입력해주세요.")
         private String email;
 
-        @ApiModelProperty(value = "비밀번호", example = "Stringcat!", required = true)
+        @ApiModelProperty(value = "비밀번호", example = "stringcat12", required = true)
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         private String password;
 

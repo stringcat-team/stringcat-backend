@@ -7,15 +7,14 @@ import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
 import com.sp.api.common.dto.ApiResponse;
-import com.sp.api.common.exception.ApiException;
 import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
 import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,33 +28,29 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = "/auth")
+@RequiredArgsConstructor
 @Api(value = "AuthController - 인증 관련 API")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @ApiOperation(value = "일반 로그인 API", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
     @PostMapping("/login")
     public ApiResponse<JwtToken> login(@RequestBody AuthReqDto.Login request) {
 
         User user = userService.findByEmailAndDeletedFalse(request.getEmail())
-                .orElseThrow(() -> new ApiException("존재하지 않는 Email 입니다."));
+                .orElseThrow(() -> new StringcatCustomException("존재하지 않는 Email 입니다.", ErrorCode.NOT_FOUND));
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new ApiException("비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.");
+            throw new StringcatCustomException("비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.", ErrorCode.NOT_FOUND);
         }
 
         Authentication authentication = authenticationManager.authenticate(

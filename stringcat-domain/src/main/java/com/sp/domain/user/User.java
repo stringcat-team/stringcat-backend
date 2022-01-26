@@ -80,4 +80,8 @@ public class User {
     @Column
     private boolean deleted;
 
+    public void delete() {
+        this.deleted = true;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

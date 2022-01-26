@@ -7,21 +7,22 @@ import com.sp.domain.user.User;
 import com.sp.domain.user.UserQuerydslRepository;
 import com.sp.domain.user.UserRepository;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired GoogleClient googleClient;
-    @Autowired GithubClient githubClient;
-    @Autowired KakaoClient kakaoClient;
-    @Autowired JwtTokenProvider jwtTokenProvider;
-    @Autowired UserRepository userRepository;
-    @Autowired UserQuerydslRepository userQuerydslRepository;
+    private final GoogleClient googleClient;
+    private final GithubClient githubClient;
+    private final KakaoClient kakaoClient;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final UserQuerydslRepository userQuerydslRepository;
 
     @Transactional
     public AuthResDto.AuthRes kakaoLogin(AuthReqDto.Social request) {
