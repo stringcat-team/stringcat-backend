@@ -1,4 +1,4 @@
-package com.sp.api.config;
+package com.sp.api.common.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
