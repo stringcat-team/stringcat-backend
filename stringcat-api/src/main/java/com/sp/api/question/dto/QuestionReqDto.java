@@ -19,12 +19,12 @@ public class QuestionReqDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Search {
-        private String keyword;
-        private String condition;
+        private String keyword = "";
+        private String condition = "";
 
-        private int cursor;
-        private int size;
-        private String sort;
+        private int cursor = 0;
+        private int size = 10;
+        private String sort = "hits";
 
         private List<Long> skills;
 

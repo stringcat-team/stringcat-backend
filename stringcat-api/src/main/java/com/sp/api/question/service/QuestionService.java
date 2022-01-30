@@ -1,23 +1,21 @@
 package com.sp.api.question.service;
 
+import static com.sp.common.utils.RedisKeyUtils.KeyPrefix.*;
 import static com.sp.exception.type.ErrorCode.*;
 
 import com.sp.api.question.dto.QuestionReqDto;
 import com.sp.api.question.dto.QuestionResDto;
+import com.sp.domain.likes.LikesCacheRepository;
 import com.sp.domain.question.Question;
 import com.sp.domain.question.QuestionRepository;
-import com.sp.domain.skill.SkillRepository;
 import com.sp.domain.user.User;
 import com.sp.domain.user.UserRepository;
 import com.sp.exception.type.StringcatCustomException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,19 +26,39 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
+    private final LikesCacheRepository likesCacheRepository;
+
     @Transactional(readOnly = true)
-    public List<QuestionResDto> getQuestions(QuestionReqDto.Search request) {
+    public List<QuestionResDto> getQuestions(Long userId, QuestionReqDto.Search request) {
         List<Question> questions = questionRepository.findAllQuestionByPage(request.toBrowser());
+        List<Long> ids = questions.stream()
+            .map(Question::getId)
+            .collect(Collectors.toList());
+
+        Map<Long, Integer> likeCountMap = likesCacheRepository.findCountList(QUESTION_LIKE_COUNT, ids);
+        Map<Long, Integer> disLikeCountMap = likesCacheRepository.findCountList(QUESTION_DIS_LIKE_COUNT, ids);
+
+        Map<Long, Boolean> likePushedMap = likesCacheRepository.findPushedList(QUESTION_LIKE, ids, userId);
+        Map<Long, Boolean> disLikePushedMap = likesCacheRepository.findPushedList(QUESTION_DIS_LIKE, ids, userId);
 
         return questions.stream()
-            .map(QuestionResDto::of)
+            .map(question -> QuestionResDto.of(question,
+                likeCountMap.getOrDefault(question.getId(), 0), disLikeCountMap.getOrDefault(question.getId(), 0),
+                likePushedMap.getOrDefault(question.getId(), false), disLikePushedMap.getOrDefault(question.getId(), false)))
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public QuestionResDto getQuestion(Long questionId) {
+    public QuestionResDto getQuestion(Long userId, Long questionId) {
         Question question = findQuestionById(questionId);
-        return QuestionResDto.of(question);
+
+        int likeCount = likesCacheRepository.findCount(QUESTION_LIKE_COUNT, questionId);
+        int disLikeCount = likesCacheRepository.findCount(QUESTION_DIS_LIKE_COUNT, questionId);
+
+        boolean likePushed = likesCacheRepository.findPushed(QUESTION_LIKE, questionId, userId);
+        boolean disLikePushed = likesCacheRepository.findPushed(QUESTION_DIS_LIKE, questionId, userId);
+
+        return QuestionResDto.of(question, likeCount, disLikeCount, likePushed, disLikePushed);
     }
 
     @Transactional
