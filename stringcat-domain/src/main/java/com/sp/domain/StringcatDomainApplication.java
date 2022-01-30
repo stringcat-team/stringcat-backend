@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @ComponentScan(basePackageClasses = StringcatDomainApplication.class)
-@Configuration
 public class StringcatDomainApplication {
 
 }

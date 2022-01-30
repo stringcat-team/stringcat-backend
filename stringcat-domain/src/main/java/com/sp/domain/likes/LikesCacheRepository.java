@@ -20,17 +20,25 @@ public class LikesCacheRepository {
     private final RedisTemplate<String, Object> redisTemplate;
     private final StringRedisTemplate stringRedisTemplate;
 
-    public Map<Long, Boolean> findPushed(KeyPrefix keyPrefix, List<Long> ids, Long userId) {
+    public boolean findPushed(KeyPrefix keyPrefix, Long id, Long userId) {
+        Boolean pushed = redisTemplate.opsForSet().isMember(RedisKeyUtils.generateKey(keyPrefix, id), userId);
+        return pushed != null && pushed;
+    }
+
+    public int findCount(KeyPrefix keyPrefix, Long id) {
+        String count = stringRedisTemplate.opsForValue().get(RedisKeyUtils.generateKey(keyPrefix, id));
+        return count == null ? 0 : Integer.parseInt(count);
+    }
+
+    public Map<Long, Boolean> findPushedList(KeyPrefix keyPrefix, List<Long> ids, Long userId) {
         RedisSerializer keySerializer = redisTemplate.getKeySerializer();
         RedisSerializer valueSerializer = redisTemplate.getValueSerializer();
-
-        String strUserId = String.valueOf(userId);
 
         List<String> keys = RedisKeyUtils.generateKeys(keyPrefix, ids);
         List<Object> pushed = redisTemplate.executePipelined(
             (RedisCallback<Object>) connection -> {
                 keys.forEach(key -> {
-                    connection.sIsMember(keySerializer.serialize(key), valueSerializer.serialize(strUserId));
+                    connection.sIsMember(keySerializer.serialize(key), valueSerializer.serialize(userId));
                 });
                 return null;
             });
@@ -44,7 +52,7 @@ public class LikesCacheRepository {
         return pushedMap;
     }
 
-    public Map<Long, Integer> findCount(KeyPrefix keyPrefix, List<Long> ids) {
+    public Map<Long, Integer> findCountList(KeyPrefix keyPrefix, List<Long> ids) {
         List<String> keys = RedisKeyUtils.generateKeys(keyPrefix, ids);
         List<String> counts = stringRedisTemplate.opsForValue().multiGet(keys);
 
