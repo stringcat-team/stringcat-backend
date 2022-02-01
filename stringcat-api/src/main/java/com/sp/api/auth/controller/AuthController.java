@@ -72,6 +72,8 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ApiResponse signUp(@Valid @RequestBody AuthReqDto.SignUp request) {
 
+        log.info("회원가입 REQ :: {}", request.toString());
+
         userService.register(request);
 
         return ApiResponse.success(new AuthResDto.AuthRes());
@@ -80,12 +82,18 @@ public class AuthController {
     @ApiOperation(value = "GOOGLE 로그인 API", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
     public ApiResponse<AuthResDto.AuthRes> google(@RequestBody AuthReqDto.Social request) {
+
+        log.info("Google REQ 성공 :: {} ", request.toString());
+
         return ApiResponse.success(authService.googleLogin(request));
     }
 
     @ApiOperation(value = "GITHUB 로그인 API", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
     public ApiResponse<AuthResDto.AuthRes> github(@RequestBody AuthReqDto.Social request) {
+
+        log.info("Github REQ 성공 :: {} ", request.toString());
+
         return ApiResponse.success(authService.githubLogin(request));
     }
 
@@ -93,7 +101,8 @@ public class AuthController {
     @PostMapping("/kakao")
     public ApiResponse<AuthResDto.AuthRes> kakao(@RequestBody AuthReqDto.Social request) {
 
-        log.info("kakao REQ 성공 :: {} ", request.toString());
+        log.info("Kakao REQ 성공 :: {} ", request.toString());
+
         return ApiResponse.success(authService.kakaoLogin(request));
     }
 
@@ -115,4 +124,5 @@ public class AuthController {
 
         return ApiResponse.success(authRes);
     }
+
 }

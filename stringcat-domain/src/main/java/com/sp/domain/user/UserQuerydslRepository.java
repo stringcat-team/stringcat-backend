@@ -13,13 +13,11 @@ public class UserQuerydslRepository {
 
     @Transactional
     public User findBySocialId(String socialId) {
-
         return queryFactory
                 .selectFrom(QUser.user)
                 .where(QUser.user.socialId.eq(socialId))
                 .fetchOne();
 
     }
-
 
 }
