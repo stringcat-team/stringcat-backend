@@ -21,4 +21,19 @@ public class SkillReqDto {
         private String name;
 
     }
+
+    @Data
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    @ApiModel("Admin Skill Registry")
+    public static class Search {
+
+        @ApiModelProperty(value = "skill 명", example = "java")
+        private String name;
+
+        public SkillResDto.SkillInfo toClient() {
+            return new SkillResDto.SkillInfo();
+        }
+
+    }
 }

@@ -7,9 +7,13 @@ import com.sp.api.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RequestMapping("/user")
@@ -54,5 +58,21 @@ public class UserController {
         return ApiResponse.success(response);
 
     }
+
+    //회원 조회
+/*    @ApiOperation(value = "회원 조회 API", notes = "회원 검색 및 전체 조회 API 검색 키워드는 기술명과 닉네임으로 조회가능")
+    @GetMapping("/search")
+    public ApiResponse<Page<UserResDto.UserInfo>> search(@ModelAttribute UserReqDto.Search request,
+                                                         @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                                         @RequestParam(value = "size", defaultValue = "20", required = false) Integer size,
+                                                         @RequestParam(value = "sort", defaultValue = "id", required = false) String sort) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, sort);
+        Page<UserResDto.UserInfo> response = userService.search(request, pageRequest);
+
+        return ApiResponse.success(response);
+
+    }*/
+
+    //특정 회원 조회
 
 }

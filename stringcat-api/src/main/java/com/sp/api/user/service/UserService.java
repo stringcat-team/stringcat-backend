@@ -1,6 +1,8 @@
 package com.sp.api.user.service;
 
 import com.sp.api.auth.dto.AuthReqDto;
+import com.sp.api.user.dto.UserReqDto;
+import com.sp.api.user.dto.UserResDto;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
@@ -10,11 +12,19 @@ import com.sp.exception.type.ErrorCode;
 import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -27,6 +37,27 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserQuerydslRepository userQuerydslRepository;
+
+    public long getUserId() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        if(requestAttributes == null) {
+            return -1;
+        }
+
+        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        Object userId = request.getAttribute("ID");
+
+        return isNotNull(userId) ? (long) userId : -1;
+    }
+
+    public boolean isNull(Object o) {
+        return Objects.isNull(o);
+    }
+
+    public boolean isNotNull(Object o) {
+        return !isNull(o);
+    }
 
     public Optional<User> findByEmailAndDeletedFalse(String email) {
         return userRepository.findByEmailAndDeletedFalse(email);
@@ -96,4 +127,8 @@ public class UserService {
 
         user.delete();
     }
+
+    /*public Page<UserResDto.UserInfo> search(UserReqDto.Search request, PageRequest pageRequest) {
+        User user = getById(getUserId());
+    }*/
 }
