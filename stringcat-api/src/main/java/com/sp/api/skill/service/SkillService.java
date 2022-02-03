@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -21,15 +23,25 @@ public class SkillService {
 
     private final SkillRepository skillRepository;
 
+    public static <T> List<T> toList(final Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
     public Optional<Skill> findByName(String name) {
         return skillRepository.findByName(name);
+    }
+
+    public Skill getByName(String name) {
+        return findByName(name)
+                .orElseThrow(() -> new StringcatCustomException("존재하지 않는 기술명입니다. 해당 기술을 등록해주세요.", ErrorCode.NOT_FOUND));
     }
 
     //skill register
     public void register(SkillReqDto.Register request) {
         Optional<Skill> nullCheck = findByName(request.getName());
 
-        if(!nullCheck.isEmpty()) {
+        if(nullCheck.isPresent()) {
             throw new StringcatCustomException("이미 존재하는 값입니다.", ErrorCode.CONFLICT_EXCEPTION);
         }
 
@@ -42,13 +54,20 @@ public class SkillService {
     }
 
     //skill search
-    public List<Skill> findAll() {
-        return skillRepository.findAll();
+    public List<SkillResDto.SkillInfo> search(SkillReqDto.Search request) {
+        List<Skill> skillList = skillRepository.findAll();
+
+
+        return skillList
+                .stream()
+                .map(SkillResDto.SkillInfo::toDto)
+                .collect(Collectors.toList());
     }
 
-    public SkillResDto.SkillInfo toEntity(Skill skill) {
-        return new SkillResDto.SkillInfo()
-                .setId(skill.getId())
-                .setName(skill.getName());
+    public Skill toEntity(SkillResDto.SkillInfo skill) {
+        return Skill.builder()
+                .id(skill.getId())
+                .name(skill.getName())
+                .build();
     }
 }

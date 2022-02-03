@@ -1,10 +1,11 @@
 package com.sp.api.skill.controller;
 
+import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.skill.dto.SkillReqDto;
+import com.sp.api.skill.dto.SkillResDto;
 import com.sp.api.skill.service.SkillService;
 import com.sp.domain.skill.Skill;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,9 @@ public class AdminSkillController {
 
     @ApiOperation(value = "기술명 조회 API", notes = "기술명 중복시 등록이 불가합니다. 여기서 확인 후 추가해주세요.")
     @GetMapping("/fetch")
-    public List<Skill> fetch() {
-        List<Skill> skillList = skillService.findAll();
+    public ApiResponse<List<SkillResDto.SkillInfo>> search(SkillReqDto.Search request) {
+        List<SkillResDto.SkillInfo> skillList = skillService.search(request);
 
-        return skillList;
+        return ApiResponse.success(skillList);
     }
 }

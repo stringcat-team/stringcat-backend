@@ -21,4 +21,5 @@ public class AuthResDto {
         private String email;
         private String socialId;
     }
+
 }

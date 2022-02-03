@@ -42,6 +42,8 @@ public class UserReqDto {
         @ApiModelProperty(value = "기술명", example = "java")
         private String skill;
 
+        private Long id;
+
     }
 
     @Data
