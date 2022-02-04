@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -53,15 +55,22 @@ public class SkillService {
         skill = skillRepository.save(skill);
     }
 
-    //skill search
-    public List<SkillResDto.SkillInfo> search(SkillReqDto.Search request) {
-        List<Skill> skillList = skillRepository.findAll();
+    //skill 전체조회
+    public List<SkillResDto.SkillInfo> fetch() {
 
+        List<Skill> skillList = skillRepository.findAll();
 
         return skillList
                 .stream()
                 .map(SkillResDto.SkillInfo::toDto)
                 .collect(Collectors.toList());
+    }
+
+    //단건조회
+    public String search(SkillReqDto.Search request) {
+        Skill skill = getByName(request.getName());
+
+        return skill.getName() + "는 존재하는 기술명입니다.";
     }
 
     public Skill toEntity(SkillResDto.SkillInfo skill) {
