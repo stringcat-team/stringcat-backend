@@ -5,12 +5,14 @@ import lombok.experimental.Accessors;
 
 public class AuthResDto {
 
-    @Data
+    @Getter
+    @Builder
     @NoArgsConstructor
+    @AllArgsConstructor
     @Accessors(chain = true)
     public static class AuthRes {
         private String accessToken;
-        private boolean isNewMember;
+        private Boolean isNewMember;
     }
 
     @Data

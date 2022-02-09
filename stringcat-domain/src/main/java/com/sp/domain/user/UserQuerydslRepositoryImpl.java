@@ -2,16 +2,16 @@ package com.sp.domain.user;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
+@Service
 @RequiredArgsConstructor
-public class UserQuerydslRepository {
+public class UserQuerydslRepositoryImpl {
 
     private final JPAQueryFactory queryFactory;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findBySocialId(String socialId) {
         return queryFactory
                 .selectFrom(QUser.user)

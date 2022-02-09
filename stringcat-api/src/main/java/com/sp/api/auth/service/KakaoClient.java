@@ -1,6 +1,7 @@
 package com.sp.api.auth.service;
 
 import com.sp.api.auth.dto.AuthResDto;
+import com.sp.api.auth.dto.KakaoResDto;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
@@ -24,23 +25,22 @@ public class KakaoClient implements ClientProxy {
 
     @Override
     public User getUserData(String accessToken) {
-        AuthResDto.OauthRes oauthRes = webClient.get()
+        KakaoResDto kakaoResDto = webClient.get()
                 .uri("https://kapi.kakao.com/v2/user/me")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new StringcatCustomException("Access token is unauthorized", ErrorCode.UNAUTHORIZED_EXCEPTION)))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new StringcatCustomException("Internal Server Error", ErrorCode.SERVER_EXCEPTION)))
-                .bodyToMono(AuthResDto.OauthRes.class)
+                .bodyToMono(KakaoResDto.class)
                 .block();
 
         return User.builder()
-                .socialId(String.valueOf(oauthRes.getSocialId()))
-                .email(oauthRes.getEmail())
+                .socialId(String.valueOf(kakaoResDto.getId()))
+                .email(kakaoResDto.getAccount().getEmail())
                 .createdAt(LocalDateTime.now())
                 .role(UserRole.USER)
                 .socialType(SocialType.KAKAO)
                 .deleted(false)
                 .build();
-
     }
 }

@@ -6,6 +6,9 @@ import com.sp.api.auth.security.jwt.JwtHeader;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
+import com.sp.api.auth.service.GithubService;
+import com.sp.api.auth.service.GoogleService;
+import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
@@ -33,13 +36,12 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-
     private final UserService userService;
-
+    private final KakaoService kakaoService;
+    private final GoogleService googleService;
+    private final GithubService githubService;
     private final JwtTokenProvider tokenProvider;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
 
     @ApiOperation(value = "일반 로그인 API (미완료)", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
@@ -82,28 +84,37 @@ public class AuthController {
     @ApiOperation(value = "GOOGLE 로그인 API (완료)", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
     public ApiResponse<AuthResDto.AuthRes> google(@RequestBody AuthReqDto.Social request) {
-
         log.info("Google REQ 성공 :: {} ", request.toString());
 
-        return ApiResponse.success(authService.googleLogin(request));
+        AuthResDto.AuthRes res = googleService.login(request);
+
+        log.info("Google RES 성공 :: {}", res.toString());
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "GITHUB 로그인 API (완료)", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
     public ApiResponse<AuthResDto.AuthRes> github(@RequestBody AuthReqDto.Social request) {
-
         log.info("Github REQ 성공 :: {} ", request.toString());
 
-        return ApiResponse.success(authService.githubLogin(request));
+        AuthResDto.AuthRes res = githubService.login(request);
+
+        log.info("Github RES 성공 :: {}", res.toString());
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "KAKAO 로그인 API (완료)", notes = "카카오 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/kakao")
     public ApiResponse<AuthResDto.AuthRes> kakao(@RequestBody AuthReqDto.Social request) {
-
         log.info("Kakao REQ 성공 :: {} ", request.toString());
 
-        return ApiResponse.success(authService.kakaoLogin(request));
+        AuthResDto.AuthRes res = kakaoService.login(request);
+
+        log.info("Kakao RES 성공 :: {}", res.toString());
+
+        return ApiResponse.success(res);
     }
 
     @ApiOperation(value = "토큰 갱신 (미완료)", notes = "애플리케이션 토큰 갱신")

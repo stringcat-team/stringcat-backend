@@ -31,8 +31,10 @@ public class GithubClient implements ClientProxy {
                 .bodyToMono(AuthResDto.OauthRes.class)
                 .block();
 
+        assert oauthRes != null;
+
         return User.builder()
-                .socialId(oauthRes.getSocialId())
+                .socialId(String.valueOf(oauthRes.getSocialId()))
                 .email(oauthRes.getEmail())
                 .createdAt(LocalDateTime.now())
                 .role(UserRole.USER)

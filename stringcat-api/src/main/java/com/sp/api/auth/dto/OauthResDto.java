@@ -12,7 +12,7 @@ public class OauthResDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GoogleAccount {
-        private String socialId;
+        private Long id;
         private String email;
     }
 
@@ -21,9 +21,8 @@ public class OauthResDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KakaoAccount {
-        private String socialId;
+        private Long id;
         private String email;
     }
-
 
 }

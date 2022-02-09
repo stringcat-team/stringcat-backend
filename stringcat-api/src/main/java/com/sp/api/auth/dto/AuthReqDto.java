@@ -68,8 +68,11 @@ public class AuthReqDto {
     @NoArgsConstructor
     @ApiModel("Social Login")
     public static class Social {
-        private String accessToken;
-    }
 
+        @ApiModelProperty(value = "accessToken을 입력해주세요.", example = "accesstoken", required = true)
+        @NotEmpty(message = "accessToken을 입력하여야합니다. ")
+        private String accessToken;
+
+    }
 
 }
