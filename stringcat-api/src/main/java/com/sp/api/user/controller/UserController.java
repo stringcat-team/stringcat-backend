@@ -24,14 +24,14 @@ public class UserController {
     private final UserService userService;
 
     //회원 수정
-    @ApiOperation(value = "회원 정보 수정 API")
+    @ApiOperation(value = "회원 정보 수정 API (미완료)")
     @PatchMapping("/update/{id}")
     public ApiResponse<UserResDto.UserInfo> update(@Valid @RequestBody UserReqDto.UserInfo request) {
         return ApiResponse.success(new UserResDto.UserInfo());
     }
 
     //회원 탈퇴
-    @ApiOperation(value = "회원 탈퇴 API", notes = "userId값 받아서 탈퇴")
+    @ApiOperation(value = "회원 탈퇴 API (완료)", notes = "userId값 받아서 탈퇴")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Long id) {
         log.info("회원 탈퇴 REQ :: {}", id.toString());
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     //비밀번호 확인 API
-    @ApiOperation(value = "비밀번호 확인 API", notes = "회원 수정 또는 회원 탈퇴 시 비밀번호 확인 후 넘어감")
+    @ApiOperation(value = "비밀번호 확인 API (완료)", notes = "회원 수정 또는 회원 탈퇴 시 비밀번호 확인 후 넘어감")
     @PostMapping("/{id}/verify/password")
     public ApiResponse<Boolean> checkPassword(@PathVariable("id") Long id,
                                               @RequestBody UserReqDto.PasswordCheck request) {

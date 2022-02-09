@@ -20,7 +20,7 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping("/send/verify")
-    @ApiOperation(value = "회원가입시 메일 발송 API", notes = "사용자 이메일, 제목, 내용을 파라미터로 가짐")
+    @ApiOperation(value = "회원가입시 메일 발송 API (미완료)", notes = "사용자 이메일, 제목, 내용을 파라미터로 가짐")
     public ApiResponse<MailReqDto.MailTo> authMail(@Valid @RequestBody MailReqDto.MailTo request) {
         MailReqDto.MailTo mail = new MailReqDto.MailTo();
 
@@ -35,7 +35,7 @@ public class MailController {
     }
 
     @PostMapping("/send/password")
-    @ApiOperation(value = "비밀번호 찾기 API", notes = "이메일로 요청을 받음")
+    @ApiOperation(value = "비밀번호 찾기 API (미완료)", notes = "이메일로 요청을 받음")
     public ApiResponse<MailReqDto.MailTo> setPassword(@Valid @RequestBody MailReqDto.MailTo request) {
         MailReqDto.MailTo mail = new MailReqDto.MailTo();
 
