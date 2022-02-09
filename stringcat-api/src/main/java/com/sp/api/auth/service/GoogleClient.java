@@ -1,6 +1,7 @@
 package com.sp.api.auth.service;
 
 import com.sp.api.auth.dto.AuthResDto;
+import com.sp.api.auth.dto.GoogleResDto;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
@@ -22,17 +23,17 @@ public class GoogleClient implements ClientProxy {
 
     @Override
     public User getUserData(String accessToken) {
-        AuthResDto.OauthRes oauthRes = webClient.get()
+        GoogleResDto googleResDto = webClient.get()
                 .uri("https://oauth2.googleapis.com/tokeninfo", builder -> builder.queryParam("id_token", accessToken).build())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new StringcatCustomException("Access token is unauthorized", ErrorCode.UNAUTHORIZED_EXCEPTION)))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new StringcatCustomException("Internal Server Error", ErrorCode.SERVER_EXCEPTION)))
-                .bodyToMono(AuthResDto.OauthRes.class)
+                .bodyToMono(GoogleResDto.class)
                 .block();
 
         return User.builder()
-                .socialId(oauthRes.getSocialId())
-                .email(oauthRes.getEmail())
+                .socialId(googleResDto.getSub())
+                .email(googleResDto.getEmail())
                 .createdAt(LocalDateTime.now())
                 .role(UserRole.USER)
                 .socialType(SocialType.GOOGLE)

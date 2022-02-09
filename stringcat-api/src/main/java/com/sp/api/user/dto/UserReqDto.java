@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class UserReqDto {
 
@@ -16,7 +17,11 @@ public class UserReqDto {
     @AllArgsConstructor
     @Accessors(chain = true)
     @ApiModel("Update UserInfo Form")
-    public static class UserInfo {
+    public static class UpdateForm {
+
+        @ApiModelProperty(value = "회원 id", example = "1", required = true)
+        @NotNull(message = "회원 id는 필수입니다.")
+        private Long id;
 
         @ApiModelProperty(value = "깃허브 주소", example = "https://github.com/heejeong-choi")
         private String github;

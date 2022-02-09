@@ -4,88 +4,21 @@ import com.sp.api.auth.dto.*;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.domain.user.User;
-import com.sp.domain.user.UserQuerydslRepository;
-import com.sp.domain.user.UserRepository;
+import com.sp.domain.user.UserQuerydslRepositoryImpl;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final GoogleClient googleClient;
-    private final GithubClient githubClient;
-    private final KakaoClient kakaoClient;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
-    private final UserQuerydslRepository userQuerydslRepository;
-
-    @Transactional
-    public AuthResDto.AuthRes kakaoLogin(AuthReqDto.Social request) {
-        User kakaoUser = kakaoClient.getUserData(request.getAccessToken());
-        String socialId = kakaoUser.getSocialId();
-        User user = userQuerydslRepository.findBySocialId(socialId);
-
-        JwtToken token = jwtTokenProvider.generateNewToken(socialId);
-
-        if(user == null) {
-            userRepository.save(kakaoUser);
-
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(true);
-        } else {
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(false);
-        }
-    }
-
-    @Transactional
-    public AuthResDto.AuthRes googleLogin(AuthReqDto.Social request) {
-        User googleUser = googleClient.getUserData(request.getAccessToken());
-        String socialId = googleUser.getSocialId();
-        User user = userQuerydslRepository.findBySocialId(socialId);
-
-        JwtToken token = jwtTokenProvider.generateNewToken(socialId);
-
-        if(user == null) {
-            userRepository.save(googleUser);
-
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(true);
-        } else {
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(false);
-        }
-    }
-
-    @Transactional
-    public AuthResDto.AuthRes githubLogin(AuthReqDto.Social request) {
-        User githubUser = githubClient.getUserData(request.getAccessToken());
-        String socialId = githubUser.getSocialId();
-        User user = userQuerydslRepository.findBySocialId(socialId);
-
-        JwtToken token = jwtTokenProvider.generateNewToken(socialId);
-
-        if(user == null) {
-            userRepository.save(githubUser);
-
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(true);
-        } else {
-            return new AuthResDto.AuthRes()
-                    .setAccessToken(token.getToken())
-                    .setNewMember(false);
-        }
-    }
+    private final UserQuerydslRepositoryImpl userQuerydslRepository;
 
     public AuthResDto.AuthRes updateToken(JwtToken jwtToken) {
         Claims claims = jwtToken.getTokenClaims();
@@ -98,9 +31,26 @@ public class AuthService {
 
         JwtToken newToken = jwtTokenProvider.generateNewToken(socialId);
 
-        return new AuthResDto.AuthRes()
-                .setAccessToken(newToken.getToken())
-                .setNewMember(false);
+        return AuthResDto.AuthRes.builder()
+                .accessToken(newToken.getToken())
+                .build();
+    }
+
+    public Long getUserId(String token) {
+        JwtToken jwtToken = jwtTokenProvider.convertStringToJwtToken(token);
+
+        Claims claims = jwtToken.getTokenClaims();
+
+        if(claims == null) {
+            return null;
+        }
+
+        try {
+            User user = userQuerydslRepository.findBySocialId(claims.getSubject());
+            return user.getId();
+        } catch (NullPointerException ex) {
+            throw new StringcatCustomException("사용자가 존재하지 않습니다.", ErrorCode.NOT_FOUND_USER);
+        }
     }
 
 }
