@@ -1,4 +1,4 @@
-package com.sp.api.user.controller;
+package com.sp.api.auth.controller;
 
 import com.sp.api.common.dto.ApiResponse;
 import com.sp.api.user.dto.MailReqDto;

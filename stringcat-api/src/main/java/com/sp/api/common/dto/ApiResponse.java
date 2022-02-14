@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,4 +27,5 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(ErrorCode errorCode, String message) {
         return new ApiResponse<>(errorCode.getCode(), message, null);
     }
+
 }

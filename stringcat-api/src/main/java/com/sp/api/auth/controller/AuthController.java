@@ -6,11 +6,8 @@ import com.sp.api.auth.security.jwt.JwtHeader;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
-import com.sp.api.auth.service.GithubService;
-import com.sp.api.auth.service.GoogleService;
 import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
-import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
 import com.sp.exception.type.ErrorCode;
 import com.sp.exception.type.StringcatCustomException;
@@ -36,10 +33,6 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
-    private final KakaoService kakaoService;
-    private final GoogleService googleService;
-    private final GithubService githubService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -48,7 +41,7 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<JwtToken> login(@RequestBody AuthReqDto.Login request) {
 
-        User user = userService.findByEmailAndDeletedFalse(request.getEmail())
+        User user = authService.findByEmailAndDeletedFalse(request.getEmail())
                 .orElseThrow(() -> new StringcatCustomException("존재하지 않는 Email 입니다.", ErrorCode.NOT_FOUND));
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -65,7 +58,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        log.info("TOKE :: {}", tokenProvider.generateToken(user.getSocialId(), user.getRole()));
+        log.info("TOKEN :: {}", tokenProvider.generateToken(user.getSocialId(), user.getRole()));
 
         return ApiResponse.success(accessToken);
     }
@@ -76,31 +69,31 @@ public class AuthController {
 
         log.info("회원가입 REQ :: {}", request.toString());
 
-        userService.register(request);
+        authService.register(request);
 
         return ApiResponse.success(new AuthResDto.AuthRes());
     }
 
-    @ApiOperation(value = "GOOGLE 로그인 API (완료)", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @ApiOperation(value = "GOOGLE 로그인 API (미완료)", notes = "구글 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/google")
     public ApiResponse<AuthResDto.AuthRes> google(@RequestBody AuthReqDto.Social request) {
         log.info("Google REQ 성공 :: {} ", request.toString());
 
-        AuthResDto.AuthRes res = googleService.login(request);
+        AuthResDto.AuthRes res = authService.googleLogin(request.getAccessToken());
 
         log.info("Google RES 성공 :: {}", res.toString());
 
         return ApiResponse.success(res);
     }
 
-    @ApiOperation(value = "GITHUB 로그인 API (완료)", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
+    @ApiOperation(value = "GITHUB 로그인 API (미완료)", notes = "깃허브 엑세스 토큰을 통해 애플리케이션 토큰 반환")
     @PostMapping("/github")
     public ApiResponse<AuthResDto.AuthRes> github(@RequestBody AuthReqDto.Social request) {
         log.info("Github REQ 성공 :: {} ", request.toString());
 
-        AuthResDto.AuthRes res = githubService.login(request);
+        AuthResDto.AuthRes res = authService.githubLogin(request.getAccessToken());
 
-        log.info("Github RES 성공 :: {}", res.toString());
+        log.info("Github RES 성공 :: {} ", res.toString());
 
         return ApiResponse.success(res);
     }
@@ -110,16 +103,17 @@ public class AuthController {
     public ApiResponse<AuthResDto.AuthRes> kakao(@RequestBody AuthReqDto.Social request) {
         log.info("Kakao REQ 성공 :: {} ", request.toString());
 
-        AuthResDto.AuthRes res = kakaoService.login(request);
+        AuthResDto.AuthRes kakaoRes = authService.kakaoLogin(request.getAccessToken());
 
-        log.info("Kakao RES 성공 :: {}", res.toString());
+        log.info("Kakao RES 성공 :: {}", kakaoRes.toString());
 
-        return ApiResponse.success(res);
+        return ApiResponse.success(kakaoRes);
     }
 
     @ApiOperation(value = "토큰 갱신 (미완료)", notes = "애플리케이션 토큰 갱신")
     @GetMapping("/refresh")
     public ApiResponse<AuthResDto.AuthRes> refreshToken(HttpServletRequest request) {
+
         String accessToken = JwtHeader.getAccessToke(request);
         JwtToken jwtToken = tokenProvider.convertStringToJwtToken(accessToken);
 

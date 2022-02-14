@@ -24,8 +24,9 @@ public class JwtToken {
     }
 
     public JwtToken(String socialId, UserRole userRole, Date expired, Key key) {
+        String role = userRole.toString();
         this.key = key;
-        this.token = generateToken(socialId, userRole.toString(), expired);
+        this.token = generateToken(socialId, role, expired);
     }
 
     private String generateToken(String socialId, String role, Date expired) {
