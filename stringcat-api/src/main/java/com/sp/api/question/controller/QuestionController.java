@@ -38,10 +38,8 @@ public class QuestionController {
 
     @ApiOperation(value = "질문 등록 (미완료)", notes = "새로운 질문 등록")
     @PostMapping("/question")
-    public ApiResponse<String> createQuestion(@RequestBody @Valid QuestionReqDto.Create request) {
-        questionService.createQuestion(3L, request);
-
-        return ApiResponse.success("OK");
+    public ApiResponse<QuestionResDto> createQuestion(@RequestBody @Valid QuestionReqDto.Create request) {
+        return ApiResponse.success(questionService.createQuestion(3L, request));
     }
 
     @ApiOperation(value = "질문 수정 (미완료)", notes = "기존의 질문 수정")
