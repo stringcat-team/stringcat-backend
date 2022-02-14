@@ -1,7 +1,11 @@
 package com.sp.api.auth.security.config;
 
+import com.sp.api.auth.security.jwt.JwtAuthenticationFilter;
+import com.sp.api.auth.security.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -20,19 +25,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         jsr250Enabled = true,
         prePostEnabled = true
 )
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-/*
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }*/
+
+    private final JwtTokenProvider tokenProvider;
 
     public static final String[] IGNORE_PAGES = new String[]{
             "/h2-console/**",
-            "/v2/api-docs",
+            "/v3/api-docs",
             "/configuration/**",
             "/webjars/**",
-            "swagger*/**"
+            "/swagger*/**"
     };
 
     @Override
@@ -42,14 +45,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        JwtAuthenticationFilter authFilter = new JwtAuthenticationFilter(tokenProvider);
+
         http
-                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .headers()
+                .frameOptions().sameOrigin()
+                .and()
+                .cors()
+                .and()
+                .csrf().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+//                .csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/**").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //                .and()
 //                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

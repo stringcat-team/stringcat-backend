@@ -13,9 +13,14 @@ public enum ErrorCode {
 
     // 400 Bad Request
     VALIDATION_EXCEPTION(BAD_REQUEST, "VA01", "잘못된 요청입니다."),
+    INVALID_REFRESH_TOKEN(BAD_REQUEST, "VA02", "리프레시 토큰이 유효하지 않습니다."),
+    MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "VA03", "리프레시 토큰의 유저 정보가 일치하지 않습니다."),
 
     // 401 UnAuthorized
     UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "UA01", "다시 인증해주세요."),
+    MALFORMED_JWT_TOKEN(UNAUTHORIZED, "UA02", "잘못된 형식의 토큰입니다."),
+    INVALID_AUTH_TOKEN(UNAUTHORIZED, "VA03", "권한 정보가 없는 토큰입니다."),
+    UNAUTHORIZED_MEMBER(UNAUTHORIZED, "VA04", "현재 내 계정 정보가 존재하지 않습니다."),
 
     // 403 Forbidden
     FORBIDDEN_EXCEPTION(FORBIDDEN, "FB01", "허용되지 않는 요청입니다."),

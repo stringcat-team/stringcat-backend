@@ -15,13 +15,4 @@ public class AuthResDto {
         private Boolean isNewMember;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Accessors(chain = true)
-    public static class OauthRes {
-        private String email;
-        private String socialId;
-    }
-
 }
