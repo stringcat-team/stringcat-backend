@@ -1,5 +1,7 @@
 package com.sp.api.auth.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sp.api.auth.dto.GithubResDto;
 import com.sp.api.auth.dto.GoogleResDto;
 import com.sp.api.auth.dto.KakaoResDto;
@@ -24,6 +26,10 @@ import static java.lang.String.*;
 public class Oauth2Client {
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+    String kakaoUrl = "https://kapi.kakao.com/v2/user/me";
+    String googleUrl = "https://oauth2.googleapis.com/tokeninfo";
+    String githubUrl = "https://github.com/login/oauth/access_token";
 
     public KakaoResDto getKakaoUserInfo(String accessToken) {
         try {
@@ -58,7 +64,7 @@ public class Oauth2Client {
 
         HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange( "https://kapi.kakao.com/v2/user/me", HttpMethod.POST, kakaoRequest, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(kakaoUrl, HttpMethod.POST, kakaoRequest, String.class);
         log.info(valueOf(response.getStatusCode()));
         log.info(response.getBody());
 
@@ -85,13 +91,17 @@ public class Oauth2Client {
 
         HttpEntity<MultiValueMap<String, String>> googleRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange( "https://oauth2.googleapis.com/tokeninfo", HttpMethod.POST, googleRequest, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(googleUrl, HttpMethod.POST, googleRequest, String.class);
 
-        JSONObject body = new JSONObject(response.getBody());
-        String socialId = body.getString("id");
-        String email = body.getJSONObject("account_email").getString("email");
+        GoogleResDto googleUser = null;
 
-        return new GoogleResDto(socialId, email);
+        try {
+            googleUser = objectMapper.readValue(response.getBody(), GoogleResDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return googleUser;
     }
 
     public GithubResDto getUserInfoByGithubToken(String accessToken) {
@@ -101,7 +111,7 @@ public class Oauth2Client {
 
         HttpEntity<MultiValueMap<String, String>> githubRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange( "https://github.com/login/oauth/access_token", HttpMethod.POST, githubRequest, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(githubUrl, HttpMethod.POST, githubRequest, String.class);
 
         JSONObject body = new JSONObject(response.getBody());
         String socialId = body.getString("id");
