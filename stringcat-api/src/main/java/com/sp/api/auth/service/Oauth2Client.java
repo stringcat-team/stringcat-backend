@@ -2,10 +2,7 @@ package com.sp.api.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sp.api.auth.dto.GithubResDto;
-import com.sp.api.auth.dto.GoogleResDto;
-import com.sp.api.auth.dto.KakaoResDto;
-import com.sp.common.type.HttpStatusCode;
+import com.sp.api.auth.dto.*;
 import com.sp.exception.type.ErrorCode;
 import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +24,10 @@ public class Oauth2Client {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    String kakaoUrl = "https://kapi.kakao.com/v2/user/me";
-    String googleUrl = "https://oauth2.googleapis.com/tokeninfo";
-    String githubUrl = "https://github.com/login/oauth/access_token";
+    private final String KAKAO_URL = "https://kapi.kakao.com/v2/user/me";
+    private final String GOOGLE_URL = "https://oauth2.googleapis.com/tokeninfo?id_token=";
+    private final String GITHUB_URL = "https://github.com/login/oauth/access_token";
+    private final String CONTENT_TYPE_VALUE = "application/x-www-form-urlencoded;charset=utf-8";
 
     public KakaoResDto getKakaoUserInfo(String accessToken) {
         try {
@@ -58,30 +56,30 @@ public class Oauth2Client {
     public KakaoResDto getUserInfoByKakaoToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add("Content-type", CONTENT_TYPE_VALUE);
 
-        log.info("------------------요청 이전------------------");
+        log.info("------------------요청------------------");
 
-        HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(headers);
+        HttpEntity<HttpHeaders> kakaoRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(kakaoUrl, HttpMethod.POST, kakaoRequest, String.class);
-        log.info(valueOf(response.getStatusCode()));
-        log.info(response.getBody());
+        ResponseEntity<String> response = restTemplate.exchange(
+                KAKAO_URL, HttpMethod.POST, kakaoRequest, String.class);
+
+        log.info("kakao로부터 가져온 응답 :: {}", response);
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        if(response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            log.info("Encountered Error while Calling API");
-            throw new StringcatCustomException("this access token does not exist", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        KakaoResDto kakaoUser = null;
+
+        try {
+            kakaoUser = objectMapper.readValue(response.getBody(), KakaoResDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
 
-        JSONObject body = new JSONObject(response.getBody());
-        Long socialId = body.getLong("id");
-        String email = body.getJSONObject("kakao_account").getString("email");
+        log.info("kakao 유저 정보 :: {}", kakaoUser);
 
-        log.info("------------------요청 이후------------------" + socialId + " " + email);
-
-        return new KakaoResDto(socialId, email);
+        return kakaoUser;
     }
 
     public GoogleResDto getUserInfoByGoogleToken(String accessToken) {
@@ -91,7 +89,7 @@ public class Oauth2Client {
 
         HttpEntity<MultiValueMap<String, String>> googleRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(googleUrl, HttpMethod.POST, googleRequest, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GOOGLE_URL, HttpMethod.POST, googleRequest, String.class);
 
         GoogleResDto googleUser = null;
 
@@ -107,11 +105,11 @@ public class Oauth2Client {
     public GithubResDto getUserInfoByGithubToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add("Content-type", CONTENT_TYPE_VALUE);
 
         HttpEntity<MultiValueMap<String, String>> githubRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(githubUrl, HttpMethod.POST, githubRequest, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GITHUB_URL, HttpMethod.POST, githubRequest, String.class);
 
         JSONObject body = new JSONObject(response.getBody());
         String socialId = body.getString("id");
@@ -119,4 +117,5 @@ public class Oauth2Client {
 
         return new GithubResDto(socialId, email);
     }
+
 }

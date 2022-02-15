@@ -3,7 +3,6 @@ package com.sp.api.auth.service;
 import com.sp.api.auth.dto.*;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
-import com.sp.api.user.service.UserService;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
@@ -59,7 +58,7 @@ public class AuthService {
                     .socialId(socialId+"")
                     .email(email)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .socialType(SocialType.KAKAO)
                     .role(UserRole.USER)
                     .deleted(false)
@@ -102,7 +101,7 @@ public class AuthService {
                     .email(email)
                     .socialType(SocialType.GOOGLE)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .role(UserRole.USER)
                     .deleted(false)
                     .build();
@@ -144,7 +143,7 @@ public class AuthService {
                     .email(email)
                     .socialType(SocialType.GITHUB)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .role(UserRole.USER)
                     .deleted(false)
                     .build();
@@ -211,23 +210,6 @@ public class AuthService {
                 .deleted(false).build();
 
         userRepository.save(newUser);
-    }
-
-    public Long getUserId(String token) {
-        JwtToken jwtToken = jwtTokenProvider.convertStringToJwtToken(token);
-
-        Claims claims = jwtToken.getTokenClaims();
-
-        if(claims == null) {
-            return null;
-        }
-
-        try {
-            User user = userQuerydslRepository.findBySocialId(claims.getSubject());
-            return user.getId();
-        } catch (NullPointerException ex) {
-            throw new StringcatCustomException("사용자가 존재하지 않습니다.", ErrorCode.NOT_FOUND_USER);
-        }
     }
 
 }

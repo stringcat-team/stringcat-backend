@@ -33,9 +33,34 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final KakaoService kakaoService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    @ApiOperation(value = "카카오 accessToken 발급받기")
+    @PostMapping("/get/access-token")
+    public ApiResponse<String> getAccessToken(String code) {
+        log.info("카카오 토큰 REQ :: {}", code);
+
+        String token = kakaoService.getAccessToken(code);
+
+        log.info("카카오 토큰 RES :: {}", token);
+
+        return ApiResponse.success(token);
+    }
+
+    @ApiOperation(value = "카카오 사용자 정보받기")
+    @PostMapping("/get/user-info")
+    public ApiResponse<String> fetchInfo(String accessToken) {
+        log.info("카카오 토큰 REQ :: {}", accessToken);
+
+        String userInfo = kakaoService.createKakaoUser(accessToken);
+
+        log.info("카카오 토큰 RES :: {}", userInfo);
+
+        return ApiResponse.success(userInfo);
+    }
 
     @ApiOperation(value = "일반 로그인 API (미완료)", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
     @PostMapping("/login")
