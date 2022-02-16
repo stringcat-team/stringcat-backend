@@ -33,37 +33,44 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final KakaoService kakaoService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    @ApiOperation(value = "일반 로그인 API (미완료)", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
-    @PostMapping("/login")
-    public ApiResponse<JwtToken> login(@RequestBody AuthReqDto.Login request) {
+    @ApiOperation(value = "카카오 accessToken 발급받기")
+    @PostMapping("/get/access-token")
+    public ApiResponse<String> getAccessToken(String code) {
+        log.info("카카오 토큰 REQ :: {}", code);
 
-        User user = authService.findByEmailAndDeletedFalse(request.getEmail())
-                .orElseThrow(() -> new StringcatCustomException("존재하지 않는 Email 입니다.", ErrorCode.NOT_FOUND));
+        String token = kakaoService.getAccessToken(code);
 
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new StringcatCustomException("비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.", ErrorCode.NOT_FOUND);
-        }
+        log.info("카카오 토큰 RES :: {}", token);
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()
-                )
-        );
-
-        JwtToken accessToken = tokenProvider.generateToken(user.getSocialId(), user.getRole());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        log.info("TOKEN :: {}", tokenProvider.generateToken(user.getSocialId(), user.getRole()));
-
-        return ApiResponse.success(accessToken);
+        return ApiResponse.success(token);
     }
 
-    @ApiOperation(value = "일반 회원가입 API (미완료)", notes = "소셜 로그인이 아닌 일반 회원가입")
+    @ApiOperation(value = "카카오 사용자 정보받기")
+    @PostMapping("/get/user-info")
+    public ApiResponse<String> fetchInfo(String accessToken) {
+        log.info("카카오 토큰 REQ :: {}", accessToken);
+
+        String userInfo = kakaoService.createKakaoUser(accessToken);
+
+        log.info("카카오 토큰 RES :: {}", userInfo);
+
+        return ApiResponse.success(userInfo);
+    }
+
+    @ApiOperation(value = "일반 로그인 API (완료)", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
+    @PostMapping("/login")
+    public ApiResponse<AuthResDto.AuthRes> login(@RequestBody AuthReqDto.Login request) {
+        String accessToken = authService.createToken(request);
+
+        return ApiResponse.success(new AuthResDto.AuthRes(accessToken, Boolean.FALSE));
+    }
+
+    @ApiOperation(value = "일반 회원가입 API (완료)", notes = "소셜 로그인이 아닌 일반 회원가입")
     @PostMapping("/sign-up")
     public ApiResponse signUp(@Valid @RequestBody AuthReqDto.SignUp request) {
 

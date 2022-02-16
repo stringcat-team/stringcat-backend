@@ -3,7 +3,6 @@ package com.sp.api.auth.service;
 import com.sp.api.auth.dto.*;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
-import com.sp.api.user.service.UserService;
 import com.sp.domain.code.SocialType;
 import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
@@ -51,7 +50,7 @@ public class AuthService {
         String password = socialId+ADMIN_KEY;
 
         User kakaoUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId+"");
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId+"");
 
         if(kakaoUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -59,7 +58,7 @@ public class AuthService {
                     .socialId(socialId+"")
                     .email(email)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .socialType(SocialType.KAKAO)
                     .role(UserRole.USER)
                     .deleted(false)
@@ -93,7 +92,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User googleUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
 
         if (googleUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -102,7 +101,7 @@ public class AuthService {
                     .email(email)
                     .socialType(SocialType.GOOGLE)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .role(UserRole.USER)
                     .deleted(false)
                     .build();
@@ -135,7 +134,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User githubUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
 
         if (githubUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -144,7 +143,7 @@ public class AuthService {
                     .email(email)
                     .socialType(SocialType.GITHUB)
                     .createdAt(LocalDateTime.now())
-                    .password(password)
+                    .password(encodedPassword)
                     .role(UserRole.USER)
                     .deleted(false)
                     .build();
@@ -178,7 +177,7 @@ public class AuthService {
 
         String socialId = claims.getSubject();
 
-        JwtToken newToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken newToken = jwtTokenProvider.generateToken(socialId);
 
         return AuthResDto.AuthRes.builder()
                 .accessToken(newToken.getToken())
@@ -213,21 +212,13 @@ public class AuthService {
         userRepository.save(newUser);
     }
 
-    public Long getUserId(String token) {
-        JwtToken jwtToken = jwtTokenProvider.convertStringToJwtToken(token);
+    public String createToken(AuthReqDto.Login request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> {
+                    throw new StringcatCustomException("존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND_USER);
+                });
 
-        Claims claims = jwtToken.getTokenClaims();
-
-        if(claims == null) {
-            return null;
-        }
-
-        try {
-            User user = userQuerydslRepository.findBySocialId(claims.getSubject());
-            return user.getId();
-        } catch (NullPointerException ex) {
-            throw new StringcatCustomException("사용자가 존재하지 않습니다.", ErrorCode.NOT_FOUND_USER);
-        }
+        return jwtTokenProvider.generateNormalToken(user.getEmail());
     }
 
 }
