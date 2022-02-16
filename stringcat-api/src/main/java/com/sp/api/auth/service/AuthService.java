@@ -50,7 +50,7 @@ public class AuthService {
         String password = socialId+ADMIN_KEY;
 
         User kakaoUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId+"");
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId+"");
 
         if(kakaoUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -92,7 +92,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User googleUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
 
         if (googleUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -134,7 +134,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User githubUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
 
         if (githubUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -177,7 +177,7 @@ public class AuthService {
 
         String socialId = claims.getSubject();
 
-        JwtToken newToken = jwtTokenProvider.generateNewToken(socialId);
+        JwtToken newToken = jwtTokenProvider.generateToken(socialId);
 
         return AuthResDto.AuthRes.builder()
                 .accessToken(newToken.getToken())
@@ -210,6 +210,15 @@ public class AuthService {
                 .deleted(false).build();
 
         userRepository.save(newUser);
+    }
+
+    public String createToken(AuthReqDto.Login request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> {
+                    throw new StringcatCustomException("존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND_USER);
+                });
+
+        return jwtTokenProvider.generateNormalToken(user.getEmail());
     }
 
 }

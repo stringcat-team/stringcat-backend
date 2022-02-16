@@ -78,7 +78,8 @@ public class KakaoService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("&client_id=cdcbce63806f6483ae54d2083e234da1"); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://localhost:3000/auth/callback"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append(""); // TODO 인가코드 받은 redirect_uri 입력
+//            &redirect_uri=http://localhost:3000/auth/callback
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
