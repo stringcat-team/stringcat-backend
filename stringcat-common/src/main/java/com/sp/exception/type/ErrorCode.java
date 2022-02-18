@@ -15,6 +15,7 @@ public enum ErrorCode {
     VALIDATION_EXCEPTION(BAD_REQUEST, "VA01", "잘못된 요청입니다."),
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "VA02", "리프레시 토큰이 유효하지 않습니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "VA03", "리프레시 토큰의 유저 정보가 일치하지 않습니다."),
+    INVALID_FILE_NAME(BAD_REQUEST, "VA04", "업로드 한 파일의 형식이 잘못되었습니다."),
 
     // 401 UnAuthorized
     UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "UA01", "다시 인증해주세요."),

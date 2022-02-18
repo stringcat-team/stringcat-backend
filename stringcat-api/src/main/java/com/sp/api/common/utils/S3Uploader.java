@@ -3,6 +3,8 @@ package com.sp.api.common.utils;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,5 +69,18 @@ public class S3Uploader {
         }
 
         return Optional.empty();
+    }
+
+    //make unique file name, keeping origin name of file
+    private String generateFileName(String originFileName) {
+        return UUID.randomUUID().toString().concat(extractFileExtension(originFileName));
+    }
+
+    public String extractFileExtension(String fileName) {
+        try {
+            return fileName.substring(fileName.lastIndexOf("."));
+        } catch(StringIndexOutOfBoundsException e) {
+            throw new StringcatCustomException("잘못된 형식의 파일이름입니다.", ErrorCode.INVALID_FILE_NAME);
+        }
     }
 }
