@@ -7,6 +7,7 @@ import com.sp.exception.type.ErrorCode;
 import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -22,8 +23,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MailService {
 
+    private final UserService userService;
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String stringcat;
 
     private static final List<String> codeFactors = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
@@ -49,10 +54,11 @@ public class MailService {
     public void sendMail(MailReqDto.MailTo form) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(form.getEmail());
-        mailMessage.setSubject(form.getTitle());
+        mailMessage.setSubject("[stringcat] Here is your password reset request!");
         mailMessage.setText(form.getContent());
 
         javaMailSender.send(mailMessage);
     }
+
 
 }
