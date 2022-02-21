@@ -48,4 +48,11 @@ public class Answer {
     @Column
     private boolean deleted;
 
+    public void updateInfo(String contents) {
+        this.contents = contents;
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
 }
