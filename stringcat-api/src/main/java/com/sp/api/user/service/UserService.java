@@ -54,10 +54,6 @@ public class UserService {
         return !isNull(o);
     }
 
-    public Optional<User> findByEmailAndDeletedFalse(String email) {
-        return userRepository.findByEmailAndDeletedFalse(email);
-    }
-
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
@@ -73,34 +69,6 @@ public class UserService {
 
                     return new StringcatCustomException("존재하지 않는 사용자입니다.", ErrorCode.NOT_FOUND);
                 });
-    }
-
-    public void register(AuthReqDto.SignUp request) {
-        Optional<User> user = findByEmailAndDeletedFalse(request.getEmail());
-
-        if(!isEmpty(user)) {
-            throw new StringcatCustomException("이미 존재하는 회원입니다.", ErrorCode.CONFLICT_EXCEPTION);
-        }
-
-        if(user.isPresent() && request.getEmail().equals(user.get().getEmail())) {
-            throw new StringcatCustomException("이미 사용중인 이메일입니다.", ErrorCode.CONFLICT_EXCEPTION);
-        }
-
-        User newUser = User.builder()
-                .email(request.getEmail())
-                .socialType(SocialType.NONE)
-                .socialId("normal")
-                .role(UserRole.USER)
-                .password(passwordEncoder.encode(request.getPassword()))
-                .nickname(request.getNickname())
-                .github(request.getGithubUrl())
-                .score(0)
-                .intro(request.getIntro())
-                .emailFlag(true)
-                .createdAt(LocalDateTime.now())
-                .deleted(false).build();
-
-        userRepository.save(newUser);
     }
 
     public boolean isMatchedPassword(Long id, String password) {

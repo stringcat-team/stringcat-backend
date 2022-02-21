@@ -1,0 +1,6 @@
+POST http://localhost:8100/auth/kakao
+Content-Type: application/json
+
+{
+  "accessToken": "jDVPuzOqzK5nbHGWPP8O8HtQwA6eS4xLeMKnugopcFEAAAF-9kLZ_A"
+}

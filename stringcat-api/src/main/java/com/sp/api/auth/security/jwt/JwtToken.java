@@ -3,7 +3,6 @@ package com.sp.api.auth.security.jwt;
 import com.sp.domain.code.UserRole;
 import io.jsonwebtoken.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;
@@ -24,8 +23,9 @@ public class JwtToken {
     }
 
     public JwtToken(String socialId, UserRole userRole, Date expired, Key key) {
+        String role = userRole.toString();
         this.key = key;
-        this.token = generateToken(socialId, userRole.toString(), expired);
+        this.token = generateToken(socialId, role, expired);
     }
 
     private String generateToken(String socialId, String role, Date expired) {

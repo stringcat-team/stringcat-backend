@@ -62,10 +62,10 @@ public class QuestionService {
     }
 
     @Transactional
-    public void createQuestion(Long userId, QuestionReqDto.Create request) {
+    public QuestionResDto createQuestion(Long userId, QuestionReqDto.Create request) {
         Optional<User> user = userRepository.findById(userId);
-
-        questionRepository.save(request.toEntity(user.orElseThrow(NullPointerException::new)));
+        Question question = questionRepository.save(request.toEntity(user.orElseThrow(NullPointerException::new)));
+        return QuestionResDto.of(question, 0, 0, false, false);
     }
 
     @Transactional
