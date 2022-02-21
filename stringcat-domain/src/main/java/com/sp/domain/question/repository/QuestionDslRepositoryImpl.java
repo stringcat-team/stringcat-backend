@@ -6,12 +6,16 @@ import static com.sp.domain.question.QuestionStatus.*;
 import static com.sp.domain.skill.QSkill.*;
 import static com.sp.domain.user.QUser.*;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sp.domain.question.Question;
 import com.sp.domain.question.QuestionBrowser;
+import com.sp.domain.skill.Skill;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,12 +50,20 @@ public class QuestionDslRepositoryImpl implements QuestionDslRepository {
 
     @Override
     public List<Question> findAllQuestionByPage(QuestionBrowser browser) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(questionKeywordSearchFor(browser.getKeyword(), browser.getCondition()));
+        booleanBuilder.and(question.deleted.eq(ACTIVE.isStatus()));
+        if(browser.getSkills() != null) {
+            question.in(JPAExpressions
+                .select(questionSkill.question)
+                .from(questionSkill)
+                .where(questionSkill.skill.id.in(browser.getSkills()))
+            );
+        }
+
         List<Long> questionIds = queryFactory.select(question.id)
             .from(question)
-            .where(
-                questionKeywordSearchFor(browser.getKeyword(), browser.getCondition()),
-                question.deleted.eq(ACTIVE.isStatus())
-            )
+            .where(booleanBuilder)
             .orderBy(questionSortBy(browser.getSort()))
             .offset(browser.getCursor())
             .limit(browser.getSize())

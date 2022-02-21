@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Arrays;
@@ -38,7 +39,22 @@ public class JwtTokenProvider {
         return new JwtToken(socialId, userRole, expiredDate, key);
     }
 
-    public JwtToken generateNewToken(String socialId) {
+    public String generateNormalToken(String subject) {
+        Claims claims = Jwts.claims().setSubject(subject);
+
+        Date now = new Date();
+
+        Date validity = new Date(now.getTime() + JWT_EXPIRATIONS_MS);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public JwtToken generateToken(String socialId) {
         return generateToken(socialId, UserRole.USER);
     }
 
@@ -59,6 +75,23 @@ public class JwtTokenProvider {
             return new UsernamePasswordAuthenticationToken(user, jwtToken, authorities);
         } else {
             throw new RuntimeException();
+        }
+    }
+
+    public Jws<Claims> getSubject(String token) {
+        return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+    }
+
+    private Key getSignKey() {
+        return Keys.hmacShaKeyFor(JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private boolean validateToken(String token) {
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
         }
     }
 
