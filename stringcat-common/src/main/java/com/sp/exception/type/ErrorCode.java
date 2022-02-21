@@ -15,6 +15,7 @@ public enum ErrorCode {
     VALIDATION_EXCEPTION(BAD_REQUEST, "VA01", "잘못된 요청입니다."),
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "VA02", "리프레시 토큰이 유효하지 않습니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "VA03", "리프레시 토큰의 유저 정보가 일치하지 않습니다."),
+    INVALID_FILE_NAME(BAD_REQUEST, "VA04", "업로드 한 파일의 형식이 잘못되었습니다."),
 
     // 401 UnAuthorized
     UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "UA01", "다시 인증해주세요."),
@@ -29,6 +30,7 @@ public enum ErrorCode {
     NOT_FOUND(HttpStatusCode.NOT_FOUND, "NF01", "존재하지 않습니다."),
     NOT_FOUNT_QUESTION(HttpStatusCode.NOT_FOUND, "NF02", "존재하지 않는 질문입니다."),
     NOT_FOUND_USER(HttpStatusCode.NOT_FOUND, "NF03", "존재하지 않는 사용자입니다."),
+    FAILED_TO_UPLOAD_FILE(HttpStatusCode.NOT_FOUND, "NF04", "파일 업로드에 실패하였습니다."),
 
     // 409 Conflict
     CONFLICT_EXCEPTION(CONFLICT,  "CF01","이미 존재합니다."),
