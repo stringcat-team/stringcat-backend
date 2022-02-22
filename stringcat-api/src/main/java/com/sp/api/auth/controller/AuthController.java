@@ -8,17 +8,12 @@ import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
 import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
-import com.sp.domain.user.User;
 import com.sp.exception.type.ErrorCode;
-import com.sp.exception.type.StringcatCustomException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
