@@ -22,4 +22,13 @@ public class UserQuerydslRepositoryImpl {
 
     }
 
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return queryFactory
+                .selectFrom(QUser.user)
+                .where(QUser.user.email.eq(email))
+                .where(QUser.user.deleted.eq(false))
+                .fetchOne();
+    }
+
 }

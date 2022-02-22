@@ -1,4 +1,4 @@
-package com.sp.api.user.dto;
+package com.sp.api.auth.dto;
 
 import com.sp.domain.code.EmailType;
 import io.swagger.annotations.ApiModel;
@@ -22,17 +22,13 @@ public class MailReqDto {
         @NotEmpty(message = "수신자 이메일을 입력해주세요.")
         private String email;
 
-        @ApiModelProperty(value = "메일 제목", example = "[stringcat] 회원가입을 위한 이메일 인증", required = true)
-        @NotEmpty(message = "메일 제목은 필수입니다.")
-        private String title;
-
         @ApiModelProperty(value = "메일 타입", example = "VERIFIER", required = true)
         @NotNull(message = "비밀번호 찾기 시: PASSWORD_SENDER, 회원가입 인증시: VERIFIER")
         private EmailType type;
 
-        @ApiModelProperty(value = "메일 내용", example = "sd45fy", required = true)
-        @NotEmpty(message = "내용을 넣어주세요.")
-        private String content;
+        @ApiModelProperty(value = "메일 타입", example = "VERIFIER", required = true)
+        @NotNull(message = "비밀번호 찾기 시: PASSWORD_SENDER, 회원가입 인증시: VERIFIER")
+        private String code;
 
     }
 }

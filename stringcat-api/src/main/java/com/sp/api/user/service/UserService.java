@@ -78,6 +78,7 @@ public class UserService {
             return true;
         } else
             throw new StringcatCustomException("사용자의 비밀번호가 일치하지 않습니다", ErrorCode.FORBIDDEN_EXCEPTION);
+
     }
 
     @Transactional
@@ -89,6 +90,12 @@ public class UserService {
         }
 
         user.delete();
+    }
+
+    public boolean checkEmail(String email) {
+        User user = userQuerydslRepository.findByEmail(email);
+
+        return user != null && !user.getSocialId().equals("NOT_SUB");
     }
 
 }
