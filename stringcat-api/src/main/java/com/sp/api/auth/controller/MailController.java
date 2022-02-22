@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @Slf4j
 @RestController
@@ -45,11 +47,11 @@ public class MailController {
         return ApiResponse.success(confirm);
     }
 
-//    @PostMapping("/send/password")
-//    @ApiOperation(value = "비밀번호 찾기 API (미완료)", notes = "이메일로 요청을 받음")
-//    public ApiResponse<MailReqDto.MailTo> setPassword(@Valid @RequestBody MailReqDto.MailTo request) {
-//        MailReqDto.MailTo mail = new MailReqDto.MailTo();
-//
-//        return ApiResponse.success(new MailReqDto.MailTo());
-//    }
+    @PostMapping("/send/password")
+    @ApiOperation(value = "비밀번호 찾기 API (완료)", notes = "이메일로 요청을 받음")
+    public ApiResponse<MailReqDto.MailTo> setPassword(@RequestBody String email, EmailType type) throws Exception {
+        String tmpPwd = emailService.sendEmail(email, type);
+
+        return ApiResponse.success(new MailReqDto.MailTo());
+    }
 }

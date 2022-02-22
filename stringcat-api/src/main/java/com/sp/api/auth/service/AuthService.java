@@ -218,7 +218,11 @@ public class AuthService {
                     throw new StringcatCustomException("존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND_USER);
                 });
 
-        return jwtTokenProvider.generateNormalToken(user.getEmail());
+        if(!user.getPassword().matches(request.getPassword())) {
+            throw new StringcatCustomException("비밀번호가 일치하지 않습니다.", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        } else {
+            return jwtTokenProvider.generateNormalToken(user.getEmail());
+        }
     }
 
 }
