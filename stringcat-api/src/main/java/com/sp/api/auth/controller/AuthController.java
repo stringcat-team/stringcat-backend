@@ -6,7 +6,6 @@ import com.sp.api.auth.security.jwt.JwtHeader;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
-import com.sp.api.auth.service.EmailService;
 import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
 import com.sp.exception.type.ErrorCode;
