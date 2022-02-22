@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -75,6 +72,7 @@ public class EmailService {
             return request.getEmail();
         } else
             return "인증코드가 일치하지 않습니다.";
+
     }
 
     private MimeMessage sendMailAuth(String to) throws Exception {
