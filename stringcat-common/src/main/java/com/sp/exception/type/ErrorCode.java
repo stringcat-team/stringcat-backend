@@ -28,6 +28,7 @@ public enum ErrorCode {
     // 403 Forbidden
     FORBIDDEN_EXCEPTION(FORBIDDEN, "FB01", "허용되지 않는 요청입니다."),
     MISMATCH_WRITER(FORBIDDEN, "FB02", "작성자가 아닙니다."),
+    SOCIAL_USER_ACCESS(FORBIDDEN, "FB03", "소셜로그인 사용자는 비밀번호 찾기를 할 수 없습니다."),
 
     // 404 Not Found
     NOT_FOUND(HttpStatusCode.NOT_FOUND, "NF01", "존재하지 않습니다."),

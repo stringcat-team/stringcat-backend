@@ -4,6 +4,9 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 public class StringUtil extends StringUtils {
@@ -12,6 +15,10 @@ public class StringUtil extends StringUtils {
     private static final String TIME_SEPARATOR = "_";
     private static final String CATEGORY_PREFIX = "/";
     private static final int UNDER_BAR_INDEX = 1;
+    private static final List<String> randomCode = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+
 
     public static String buildFileName(String image, String originalFileName) {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
@@ -29,4 +36,14 @@ public class StringUtil extends StringUtils {
                 .filename(fileName, StandardCharsets.UTF_8)
                 .build();
     }
+
+    public static String generateCode() {
+        StringBuilder codes = new StringBuilder();
+        Collections.shuffle(randomCode);
+        for (int i = 0; i < 8; i++) {
+            codes.append(randomCode.get(i));
+        }
+        return codes.toString();
+    }
+
 }

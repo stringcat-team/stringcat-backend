@@ -50,7 +50,7 @@ public class AuthService {
         String password = socialId+ADMIN_KEY;
 
         User kakaoUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId+"");
+        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId+"");
 
         if(kakaoUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -92,7 +92,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User googleUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId);
 
         if (googleUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -134,7 +134,7 @@ public class AuthService {
         String password = socialId + ADMIN_KEY;
 
         User githubUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(socialId);
+        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId);
 
         if (githubUser == null) {
             String encodedPassword = passwordEncoder.encode(password);
@@ -177,7 +177,7 @@ public class AuthService {
 
         String socialId = claims.getSubject();
 
-        JwtToken newToken = jwtTokenProvider.generateToken(socialId);
+        JwtToken newToken = jwtTokenProvider.generateSocialToken(socialId);
 
         return AuthResDto.AuthRes.builder()
                 .accessToken(newToken.getToken())
@@ -218,7 +218,8 @@ public class AuthService {
                     throw new StringcatCustomException("존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND_USER);
                 });
 
-        return jwtTokenProvider.generateNormalToken(user.getEmail());
+        return jwtTokenProvider.generateToken(user.getEmail());
+
     }
 
 }

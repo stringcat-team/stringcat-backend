@@ -1,17 +1,23 @@
 package com.sp.api.auth.service;
 
 import com.sp.api.auth.dto.MailReqDto;
+import com.sp.api.common.utils.StringUtil;
 import com.sp.domain.code.EmailType;
+import com.sp.domain.user.User;
+import com.sp.domain.user.UserQuerydslRepositoryImpl;
+import com.sp.domain.user.UserRepository;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -19,35 +25,14 @@ import java.util.Random;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+    private final UserRepository userRepository;
+    private final UserQuerydslRepositoryImpl userQuerydslRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.mail.username}")
     private String stringcat;
 
-    public static final String emailAuthKey = issueTmpPw();
-    public static final String tmpPW = issueTmpPw();
-
-    public static String issueTmpPw() {
-        StringBuilder authKey = new StringBuilder();
-        Random random = new Random();
-
-        for(int i=0; i<8; i++) {
-            int index = random.nextInt(2);
-
-            switch (index) {
-                case 0:
-                    authKey.append((char) ((int) (random.nextInt(26)) + 97));
-                    break;
-                case 1:
-                    authKey.append((char) ((int) (random.nextInt(26)) + 65));
-                    break;
-                case 2:
-                    authKey.append(random.nextInt(10));
-                    break;
-            }
-        }
-
-        return authKey.toString();
-    }
+    public static final String key = StringUtil.generateCode();
 
     public String sendEmail(String to, EmailType type) throws Exception {
         if (type == EmailType.VERIFIER) {
@@ -57,12 +42,11 @@ public class EmailService {
 //                MimeMessage passwordEmail = sendTmpPW(to);
 //                javaMailSender.send(passwordEmail);
 //                break;
+        } else {
+            MimeMessage tmpPwd = sendTmpPassword(to);
+            javaMailSender.send(tmpPwd);
         }
-
-        if (type == EmailType.VERIFIER) {
-            return emailAuthKey;
-        } else
-            return tmpPW;
+        return key;
     }
 
     public String checkEmailCode(MailReqDto.MailTo request) throws Exception {
@@ -77,29 +61,65 @@ public class EmailService {
 
     private MimeMessage sendMailAuth(String to) throws Exception {
         log.info("보내는 대상 :: {} ", to);
-        log.info("인증번호 :: {}", emailAuthKey);
+        log.info("인증번호 :: {}", key);
 
         MimeMessage authEmail = javaMailSender.createMimeMessage();
         authEmail.addRecipients(Message.RecipientType.TO, to); //수신인
         authEmail.setSubject("[Stringcat] 이메일 인증번호 안내"); //메일 제목
 
         String content = "";
-        content+= "<div style='margin:100px;'>";
-        content+= "<h1> 안녕하세요 Stringcat입니다. </h1>";
+        content+= "<div>";
+        content+= "<h2>Stringcat 이메일인증</h2>";
         content+= "<br>";
         content+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
         content+= "<br>";
-        content+= "<p>감사합니다!<p>";
+        content+= "<p>감사합니다<p>";
         content+= "<br>";
         content+= "<div font-family:verdana';>";
-        content+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        content+= "<h3 style='color:#F08080;'>회원가입 인증 코드입니다.</h3>";
         content+= "<div style='font-size:130%'>";
         content+= "CODE : <strong>";
-        content+= emailAuthKey+"</strong><div><br/> ";
+        content+= key+"</strong><div><br/> ";
         content+= "</div>";
         authEmail.setText(content, "utf-8", "html");//내용
         authEmail.setFrom(new InternetAddress(stringcat,"Stringcat"));//보내는 사람
 
         return authEmail;
+    }
+
+    private MimeMessage sendTmpPassword(String to) throws Exception {
+        log.info("보내는 대상 :: {} ", to);
+        log.info("인증번호 :: {}", key);
+
+        User user = userQuerydslRepository.findByEmail(to);
+
+        if(user != null && user.getSocialId().equals("NOT_SUB")) {
+            user.setPassword(passwordEncoder.encode(key));
+
+            MimeMessage pwdEmail = javaMailSender.createMimeMessage();
+            pwdEmail.addRecipients(Message.RecipientType.TO, to); //수신인
+            pwdEmail.setSubject("[Stringcat] 임시 비밀번호 안내"); //메일 제목
+
+            String content = "";
+            content+= "<div>";
+            content+= "<h2>Stringcat 비밀번호 찾기</h2>";
+            content+= "<br>";
+            content+= "<p>발급된 비밀번호로 로그인해주세요.<p>";
+            content+= "<p>임시 비밀번호는 보안에 위험이 있으니, 꼭 변경하여 사용해주세요.</p>";
+            content+= "<br>";
+            content+= "<p>감사합니다<p>";
+            content+= "<br>";
+            content+= "<div font-family:verdana';>";
+            content+= to + "<h3 style='color:#F08080;'> 님의 임시비밀번호</h3>";
+            content+= "<div style='font-size:130%'>";
+            content+= "CODE : <strong>";
+            content+= key+"</strong><div><br/> ";
+            content+= "</div>";
+            pwdEmail.setText(content, "utf-8", "html");//내용
+            pwdEmail.setFrom(new InternetAddress(stringcat,"Stringcat"));//보내는 사람
+
+            return pwdEmail;
+        } else
+            return null;
     }
 }

@@ -8,12 +8,17 @@ import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
 import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
+import com.sp.domain.user.User;
 import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +65,17 @@ public class AuthController {
     @ApiOperation(value = "일반 로그인 API (완료)", notes = "이메일과 비밀번호로 로그인 성공시 토큰 반환")
     @PostMapping("/login")
     public ApiResponse<AuthResDto.AuthRes> login(@RequestBody AuthReqDto.Login request) {
+        log.info("일반 로그인 REQ :: {}", request.toString());
+
+        User user = authService.findByEmailAndDeletedFalse(request.getEmail())
+                .orElseThrow(() -> new StringcatCustomException("존재하지 않는 회원", ErrorCode.NOT_FOUND_USER));
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new StringcatCustomException("비밀번호를 확인해주세요.", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
         String accessToken = authService.createToken(request);
+        log.info("일반 로그인 RES :: {}", accessToken);
 
         return ApiResponse.success(new AuthResDto.AuthRes(accessToken, Boolean.FALSE));
     }
