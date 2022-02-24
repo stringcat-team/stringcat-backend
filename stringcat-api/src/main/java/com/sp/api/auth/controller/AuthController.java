@@ -16,9 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,19 +33,6 @@ public class AuthController {
     private final KakaoService kakaoService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-
-    @ApiOperation(value = "카카오 accessToken 발급받기")
-    @PostMapping("/get/access-token")
-    public ApiResponse<String> getAccessToken(String code) {
-        log.info("카카오 토큰 REQ :: {}", code);
-
-        String token = kakaoService.getAccessToken(code);
-
-        log.info("카카오 토큰 RES :: {}", token);
-
-        return ApiResponse.success(token);
-    }
 
     @ApiOperation(value = "카카오 사용자 정보받기")
     @PostMapping("/get/user-info")

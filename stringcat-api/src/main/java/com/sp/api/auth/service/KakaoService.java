@@ -64,54 +64,54 @@ public class KakaoService {
 
     }
 
-    public String getAccessToken(String code) {
-        String accessToken = "";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
-
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("&client_id=cdcbce63806f6483ae54d2083e234da1"); // TODO REST_API_KEY 입력
-            sb.append(""); // TODO 인가코드 받은 redirect_uri 입력
-//            &redirect_uri=http://localhost:3000/auth/callback
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
-
-            int responseCode = connection.getResponseCode();
-            System.out.println(responseCode + "입니다!!!!!!!!");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = "";
-            StringBuilder result = new StringBuilder();
-
-            while((line = br.readLine()) != null) {
-                result.append(line);
-            }
-
-            log.info("응답 바디 :: {}", result);
-
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result.toString());
-
-            accessToken = element.getAsJsonObject().get("access_token").getAsString();
-
-            log.info("access token :: {}", accessToken);
-
-            br.close();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return accessToken;
-    }
+//    public String getAccessToken(String code) {
+//        String accessToken = "";
+//        String reqURL = "https://kauth.kakao.com/oauth/token";
+//
+//        try {
+//            URL url = new URL(reqURL);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//
+//            connection.setRequestMethod("POST");
+//            connection.setDoOutput(true);
+//
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("&client_id=cdcbce63806f6483ae54d2083e234da1"); // TODO REST_API_KEY 입력
+//            sb.append(""); // TODO 인가코드 받은 redirect_uri 입력
+////            &redirect_uri=http://localhost:3000/auth/callback
+//            sb.append("&code=" + code);
+//            bw.write(sb.toString());
+//            bw.flush();
+//
+//            int responseCode = connection.getResponseCode();
+//            System.out.println(responseCode + "입니다!!!!!!!!");
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            String line = "";
+//            StringBuilder result = new StringBuilder();
+//
+//            while((line = br.readLine()) != null) {
+//                result.append(line);
+//            }
+//
+//            log.info("응답 바디 :: {}", result);
+//
+//            JsonParser parser = new JsonParser();
+//            JsonElement element = parser.parse(result.toString());
+//
+//            accessToken = element.getAsJsonObject().get("access_token").getAsString();
+//
+//            log.info("access token :: {}", accessToken);
+//
+//            br.close();
+//            bw.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return accessToken;
+//    }
 
     public String createKakaoUser(String accessToken) throws StringcatCustomException {
         String reqUrl = "https://kapi.kakao.com/v2/user/me";
@@ -130,17 +130,17 @@ public class KakaoService {
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line = "";
-            String result = "";
+            StringBuilder result = new StringBuilder();
 
             while ((line = br.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
 
-            log.info("response body :: {} ", result);
+            log.info("response body :: {} ", result.toString());
 
             //Gson 라이브러리로 JSON파싱
             JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
+            JsonElement element = parser.parse(result.toString());
 
             int id = element.getAsJsonObject().get("id").getAsInt();
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
