@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "follow")
 public class Follow {
