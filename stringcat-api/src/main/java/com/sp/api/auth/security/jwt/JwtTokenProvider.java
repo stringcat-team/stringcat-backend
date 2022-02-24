@@ -1,9 +1,14 @@
 package com.sp.api.auth.security.jwt;
 
+import com.google.gson.Gson;
 import com.sp.domain.code.UserRole;
+import com.sp.exception.type.ErrorCode;
+import com.sp.exception.type.StringcatCustomException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +21,7 @@ import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +35,14 @@ public class JwtTokenProvider {
     private final String JWT_SECRET_KEY = "stringcat-authorization-jwt-token-secret-key";
     private final int JWT_EXPIRATIONS_MS = 604800000;
     private final Key key;
+    private Gson gson = new Gson();
+
+    @Data
+    @Accessors(chain = true)
+    public static class TokenFormat {
+        long id;
+        String email;
+    }
 
     public JwtTokenProvider() {
         this.key = Keys.hmacShaKeyFor(JWT_SECRET_KEY.getBytes());
@@ -39,7 +53,7 @@ public class JwtTokenProvider {
         return new JwtToken(socialId, userRole, expiredDate, key);
     }
 
-    public String generateNormalToken(String subject) {
+    public String generateToken(String subject) {
         Claims claims = Jwts.claims().setSubject(subject);
 
         Date now = new Date();
@@ -54,7 +68,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public JwtToken generateToken(String socialId) {
+    public JwtToken generateSocialToken(String socialId) {
         return generateToken(socialId, UserRole.USER);
     }
 
