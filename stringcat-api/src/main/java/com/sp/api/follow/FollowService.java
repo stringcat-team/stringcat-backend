@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Slf4j
 @Service
@@ -18,12 +17,16 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserService userService;
 
-    public void follow(FollowReqDto.RequestFollow request) {
+    public FollowResDto follow(FollowReqDto.RequestFollow request) {
         Follow follow = Follow.builder()
-                .fromUserId(request.getUserId())
+                .fromUserId(request.getFromUserId())
                 .toUserId(request.getToUserId())
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        followRepository.save(follow);
+
+        return FollowResDto.of(follow);
     }
 
 }

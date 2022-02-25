@@ -13,7 +13,7 @@ public class FollowReqDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RequestFollow {
-        private long userId;
+        private long fromUserId;
         private long toUserId;
     }
 

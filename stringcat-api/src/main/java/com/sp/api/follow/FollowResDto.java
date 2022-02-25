@@ -1,5 +1,6 @@
 package com.sp.api.follow;
 
+import com.sp.domain.follow.Follow;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,16 @@ public class FollowResDto {
     private long id;
     private long fromUserId;
     private long toUserId;
+    private int followingCnt;
+    private int followedCnt;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    public static FollowResDto of(Follow follow) {
+        return new FollowResDto()
+                .setId(follow.getId())
+                .setFromUserId(follow.getFromUserId())
+                .setToUserId(follow.getToUserId())
+                .setCreatedAt(follow.getCreatedAt());
+    }
 
 }
