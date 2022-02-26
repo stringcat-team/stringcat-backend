@@ -12,9 +12,8 @@ public class FollowReqDto {
     @Accessors(chain = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RequestFollow {
-        private long fromUserId;
-        private long toUserId;
+    public static class FollowUnfollow {
+        private Long toUserId;
     }
 
 

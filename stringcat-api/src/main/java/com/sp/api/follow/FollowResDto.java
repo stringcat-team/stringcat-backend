@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class FollowResDto {
 
-    private long id;
-    private long fromUserId;
-    private long toUserId;
+    private Long id;
+    private Long fromUserId;
+    private Long toUserId;
     private int followingCnt;
     private int followedCnt;
     private LocalDateTime createdAt;

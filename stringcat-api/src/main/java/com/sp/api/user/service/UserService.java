@@ -1,8 +1,5 @@
 package com.sp.api.user.service;
 
-import com.sp.api.auth.dto.AuthReqDto;
-import com.sp.domain.code.SocialType;
-import com.sp.domain.code.UserRole;
 import com.sp.domain.user.User;
 import com.sp.domain.user.UserQuerydslRepositoryImpl;
 import com.sp.domain.user.UserRepository;
@@ -33,6 +30,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserQuerydslRepositoryImpl userQuerydslRepository;
 
+    public Optional<User> findByEmailAndDeletedFalse(String email) {
+        return userRepository.findByEmailAndDeletedFalse(email);
+    }
     public long getUserId() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
@@ -56,10 +56,6 @@ public class UserService {
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 
     public User getById(Long id) {
@@ -97,5 +93,4 @@ public class UserService {
 
         return user != null && !user.getSocialId().equals("NOT_SUB");
     }
-
 }

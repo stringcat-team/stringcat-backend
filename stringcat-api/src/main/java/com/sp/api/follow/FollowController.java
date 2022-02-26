@@ -16,9 +16,9 @@ public class FollowController {
 
     private final FollowService followService;
 
-    @ApiOperation(value = "팔로우하기 API")
+    @ApiOperation(value = "팔로우하기 API (완료)")
     @PostMapping
-    public ApiResponse<FollowResDto> follow(@RequestBody FollowReqDto.RequestFollow request) {
+    public ApiResponse<FollowResDto> follow(@RequestBody FollowReqDto.FollowUnfollow request) {
         log.info("팔로잉 REQ :: {}", request.toString());
 
         FollowResDto res = followService.follow(request);
@@ -27,4 +27,10 @@ public class FollowController {
 
         return ApiResponse.success(res);
     }
+
+//    @ApiOperation(value = "언팔로우하기 API")
+//    @DeleteMapping("/cancel/{id}")
+//    public ApiResponse unfollow(@PathVariable Long id) {
+//
+//    }
 }

@@ -35,13 +35,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserQuerydslRepositoryImpl userQuerydslRepository;
 
     private static final String ADMIN_KEY = "c3RyaW5nY2F0YWRtaW5rZXkNCg==";
-
-    public Optional<User> findByEmailAndDeletedFalse(String email) {
-        return userRepository.findByEmailAndDeletedFalse(email);
-    }
 
     public AuthResDto.AuthRes kakaoLogin(String accessToken) {
         KakaoResDto kakaoDto = oauth2Client.getKakaoUserInfo(accessToken);
@@ -185,7 +180,7 @@ public class AuthService {
     }
 
     public void register(AuthReqDto.SignUp request) {
-        Optional<User> user = findByEmailAndDeletedFalse(request.getEmail());
+        Optional<User> user = userRepository.findByEmailAndDeletedFalse(request.getEmail());
 
         if(!isEmpty(user)) {
             throw new StringcatCustomException("이미 존재하는 회원입니다.", ErrorCode.CONFLICT_EXCEPTION);
@@ -213,7 +208,7 @@ public class AuthService {
     }
 
     public String createToken(AuthReqDto.Login request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailAndDeletedFalse(request.getEmail())
                 .orElseThrow(() -> {
                     throw new StringcatCustomException("존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND_USER);
                 });

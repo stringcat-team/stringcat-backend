@@ -8,6 +8,7 @@ import com.sp.api.auth.security.jwt.JwtTokenProvider;
 import com.sp.api.auth.service.AuthService;
 import com.sp.api.auth.service.KakaoService;
 import com.sp.api.common.dto.ApiResponse;
+import com.sp.api.user.service.UserService;
 import com.sp.domain.user.User;
 import com.sp.exception.type.ErrorCode;
 import com.sp.exception.type.StringcatCustomException;
@@ -29,6 +30,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
     private final KakaoService kakaoService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -50,7 +52,7 @@ public class AuthController {
     public ApiResponse<AuthResDto.AuthRes> login(@RequestBody AuthReqDto.Login request) {
         log.info("일반 로그인 REQ :: {}", request.toString());
 
-        User user = authService.findByEmailAndDeletedFalse(request.getEmail())
+        User user = userService.findByEmailAndDeletedFalse(request.getEmail())
                 .orElseThrow(() -> new StringcatCustomException("존재하지 않는 회원", ErrorCode.NOT_FOUND_USER));
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
