@@ -80,6 +80,11 @@ public class User {
     @Column
     private boolean deleted;
 
+    public User(String sub, String email) {
+        this.socialId = sub;
+        this.email = email;
+    }
+
     public void delete() {
         this.deleted = true;
         this.updatedAt = LocalDateTime.now();

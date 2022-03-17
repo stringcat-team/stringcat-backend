@@ -34,6 +34,18 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
+    @ApiOperation(value = "카카오 accessToken 받기")
+    @GetMapping ("/get/kakao")
+    public ApiResponse<String> getAccessToken(@RequestParam String authorizedCode) {
+        log.info("카카오 승인코드 REQ :: {}", authorizedCode);
+
+        String accessToken = kakaoService.getKakaoAccessToken(authorizedCode);
+
+        log.info("카카오 access token :: {}", accessToken);
+
+        return ApiResponse.success(accessToken);
+    }
+
     @ApiOperation(value = "카카오 사용자 정보받기")
     @PostMapping("/get/user-info")
     public ApiResponse<String> fetchInfo(String accessToken) {
@@ -41,7 +53,7 @@ public class AuthController {
 
         String userInfo = kakaoService.createKakaoUser(accessToken);
 
-        log.info("카카오 토큰 RES :: {}", userInfo);
+        log.info("카카오 사용자 정보 RES :: {}", userInfo);
 
         return ApiResponse.success(userInfo);
     }

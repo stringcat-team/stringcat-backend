@@ -84,8 +84,8 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResDto.AuthRes googleLogin(String accessToken) {
-        GoogleResDto googleDto = oauth2Client.getGoogleUserInfo(accessToken);
+    public AuthResDto.AuthRes googleLogin(String code) {
+        GoogleUserDto googleDto = oauth2Client.getGoogleUserInfo(code);
 
         String socialId = googleDto.getSub();
         String email = googleDto.getEmail();
@@ -220,6 +220,16 @@ public class AuthService {
 
         return jwtTokenProvider.generateToken(user.getEmail());
 
+    }
+
+    private boolean isNewMember(GoogleUserDto googleUserDto) {
+        Optional<User> user = userRepository.findByEmail(googleUserDto.getEmail());
+        return user.isPresent();
+    }
+
+    public void joinGoogleUser(GoogleUserDto googleUserDto, OauthTokenDto tokenDto) {
+        User user = googleUserDto.toUser(tokenDto.getAccessToken());
+        userRepository.save(user);
     }
 
 }

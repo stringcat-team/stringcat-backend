@@ -15,8 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import static java.lang.String.*;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class Oauth2Client {
         }
     }
 
-    public GoogleResDto getGoogleUserInfo(String accessToken) {
+    public GoogleUserDto getGoogleUserInfo(String accessToken) {
         try {
             return getUserInfoByGoogleToken(accessToken);
         } catch (HttpClientErrorException e) {
@@ -82,7 +80,7 @@ public class Oauth2Client {
         return kakaoUser;
     }
 
-    public GoogleResDto getUserInfoByGoogleToken(String accessToken) {
+    public GoogleUserDto getUserInfoByGoogleToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -91,10 +89,10 @@ public class Oauth2Client {
 
         ResponseEntity<String> response = restTemplate.exchange(GOOGLE_URL, HttpMethod.POST, googleRequest, String.class);
 
-        GoogleResDto googleUser = null;
+        GoogleUserDto googleUser = null;
 
         try {
-            googleUser = objectMapper.readValue(response.getBody(), GoogleResDto.class);
+            googleUser = objectMapper.readValue(response.getBody(), GoogleUserDto.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

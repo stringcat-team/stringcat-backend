@@ -27,6 +27,59 @@ public class KakaoService {
 
     private final RestTemplate restTemplate;
 
+    public String getKakaoAccessToken(String code) {
+        String access_token = "";
+        String refresh_token = "";
+        String requestURL = "https://kauth.kakao.com/oauth/token";
+
+        try {
+            URL url = new URL(requestURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+            StringBuilder sb = new StringBuilder();
+            sb.append("grant_type=authorization_code");
+            sb.append("&client_id=cdcbce63806f6483ae54d2083e234da1"); // TODO REST_API_KEY 입력
+            sb.append("&redirect_uri=http://35.232.10.143/auth/callback"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&code=" + code);
+            bw.write(sb.toString());
+            bw.flush();
+
+            int responseCode = connection.getResponseCode();
+            log.info("RES CODE :: {}", responseCode);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            log.info("RES BODY :: {}", result);
+
+            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            access_token = element.getAsJsonObject().get("access_token").getAsString();
+            refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
+
+            System.out.println("access_token : " + access_token);
+            System.out.println("refresh_token : " + refresh_token);
+
+            br.close();
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return access_token;
+    }
+
     private KakaoResDto getUserInfoByToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
