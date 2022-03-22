@@ -38,7 +38,7 @@ public class EmailService {
         if (type == EmailType.VERIFIER) {
             MimeMessage authEmail = sendMailAuth(to);
             javaMailSender.send(authEmail);
-            //            case PASSWORD_SENDER:
+//                case PASSWORD_SENDER:
 //                MimeMessage passwordEmail = sendTmpPW(to);
 //                javaMailSender.send(passwordEmail);
 //                break;

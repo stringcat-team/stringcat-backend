@@ -15,8 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import static java.lang.String.*;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class Oauth2Client {
     private final String GITHUB_URL = "https://github.com/login/oauth/access_token";
     private final String CONTENT_TYPE_VALUE = "application/x-www-form-urlencoded;charset=utf-8";
 
-    public KakaoResDto getKakaoUserInfo(String accessToken) {
+    public UserInfoDto.KakaoUserInfo getKakaoUserInfo(String accessToken) {
         try {
             return getUserInfoByKakaoToken(accessToken);
         } catch (HttpClientErrorException e) {
@@ -37,7 +35,7 @@ public class Oauth2Client {
         }
     }
 
-    public GoogleResDto getGoogleUserInfo(String accessToken) {
+    public UserInfoDto.GoogleUserInfo getGoogleUserInfo(String accessToken) {
         try {
             return getUserInfoByGoogleToken(accessToken);
         } catch (HttpClientErrorException e) {
@@ -45,7 +43,7 @@ public class Oauth2Client {
         }
     }
 
-    public GithubResDto getGithubUserInfo(String accessToken) {
+    public UserInfoDto.GithubUserInfo getGithubUserInfo(String accessToken) {
         try {
             return getUserInfoByGithubToken(accessToken);
         } catch (HttpClientErrorException e) {
@@ -53,7 +51,7 @@ public class Oauth2Client {
         }
     }
 
-    public KakaoResDto getUserInfoByKakaoToken(String accessToken) {
+    public UserInfoDto.KakaoUserInfo getUserInfoByKakaoToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", CONTENT_TYPE_VALUE);
@@ -69,10 +67,10 @@ public class Oauth2Client {
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        KakaoResDto kakaoUser = null;
+        UserInfoDto.KakaoUserInfo kakaoUser = null;
 
         try {
-            kakaoUser = objectMapper.readValue(response.getBody(), KakaoResDto.class);
+            kakaoUser = objectMapper.readValue(response.getBody(), UserInfoDto.KakaoUserInfo.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -82,7 +80,7 @@ public class Oauth2Client {
         return kakaoUser;
     }
 
-    public GoogleResDto getUserInfoByGoogleToken(String accessToken) {
+    public UserInfoDto.GoogleUserInfo getUserInfoByGoogleToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -91,10 +89,10 @@ public class Oauth2Client {
 
         ResponseEntity<String> response = restTemplate.exchange(GOOGLE_URL, HttpMethod.POST, googleRequest, String.class);
 
-        GoogleResDto googleUser = null;
+        UserInfoDto.GoogleUserInfo googleUser = null;
 
         try {
-            googleUser = objectMapper.readValue(response.getBody(), GoogleResDto.class);
+            googleUser = objectMapper.readValue(response.getBody(), UserInfoDto.GoogleUserInfo.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -102,7 +100,7 @@ public class Oauth2Client {
         return googleUser;
     }
 
-    public GithubResDto getUserInfoByGithubToken(String accessToken) {
+    public UserInfoDto.GithubUserInfo getUserInfoByGithubToken(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", CONTENT_TYPE_VALUE);
@@ -115,7 +113,7 @@ public class Oauth2Client {
         String socialId = body.getString("id");
         String email = body.getJSONObject("username").getString("email");
 
-        return new GithubResDto(socialId, email);
+        return new UserInfoDto.GithubUserInfo(socialId, email);
     }
 
 }

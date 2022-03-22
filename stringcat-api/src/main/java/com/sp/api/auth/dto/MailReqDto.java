@@ -31,4 +31,16 @@ public class MailReqDto {
         private String code;
 
     }
+
+    @Data
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    @ApiModel("Mail to")
+    public static class AuthCode {
+
+        @ApiModelProperty(value = "인증 코드", example = "xp234a", required = true)
+        @NotEmpty(message = "이메일로 수신한 인증코드를 입력해주세요.")
+        private String authCode;
+
+    }
 }
