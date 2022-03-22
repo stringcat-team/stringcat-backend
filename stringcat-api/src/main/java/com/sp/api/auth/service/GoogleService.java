@@ -1,9 +1,6 @@
 package com.sp.api.auth.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sp.api.auth.dto.GoogleUserDto;
-import com.sp.api.auth.dto.OauthTokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -23,9 +20,9 @@ public class GoogleService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    private static final String CLIENT_ID = "";
-    private static final String CLIENT_SECRET = "";
-    private static final String REDIRECT_URI = "";
+    private static final String CLIENT_ID = "604487308809-7dj190vf7ab9po4k7qp79pmokshaopbf";
+    private static final String CLIENT_SECRET = "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";
+    private static final String REDIRECT_URI = "http://35.232.10.143/auth/callback";
     private static final String GRANT_TYPE = "authorization_code";
 
     public ResponseEntity<String> createPostReq(String code) {
@@ -46,38 +43,4 @@ public class GoogleService {
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
-    public OauthTokenDto getAccessToken(ResponseEntity<String> response) {
-        OauthTokenDto oauthTokenDto = null;
-
-        try {
-            oauthTokenDto = objectMapper.readValue(response.getBody(), OauthTokenDto.class);
-        } catch (JsonProcessingException e) {
-            log.error("JSON 변환과정 중 에러 :: {}", e.getMessage());
-        }
-
-        return oauthTokenDto;
-    }
-
-    public ResponseEntity<String> createGetReq(OauthTokenDto oauthTokenDto) {
-        String url = "https://www.googleapis.com/oauth2/v1/userinfo";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oauthTokenDto.getAccessToken());
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(headers);
-
-        return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-    }
-
-    public GoogleUserDto getUserInfo(ResponseEntity<String> googleUserInfoRes) {
-        GoogleUserDto googleUserDto = null;
-
-        try {
-            googleUserDto = objectMapper.readValue(googleUserInfoRes.getBody(), GoogleUserDto.class);
-        } catch (JsonProcessingException e) {
-            log.error("사용자 등록중 에러 !! :: {}", e.getMessage());
-        }
-
-        return googleUserDto;
-    }
 }

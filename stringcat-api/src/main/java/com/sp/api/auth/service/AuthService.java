@@ -1,5 +1,6 @@
 package com.sp.api.auth.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sp.api.auth.dto.*;
 import com.sp.api.auth.security.jwt.JwtToken;
 import com.sp.api.auth.security.jwt.JwtTokenProvider;
@@ -14,11 +15,9 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -30,6 +29,8 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate;
     private final Oauth2Client oauth2Client;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -37,135 +38,11 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserQuerydslRepositoryImpl userQuerydslRepository;
 
+
     private static final String ADMIN_KEY = "c3RyaW5nY2F0YWRtaW5rZXkNCg==";
 
     public Optional<User> findByEmailAndDeletedFalse(String email) {
         return userRepository.findByEmailAndDeletedFalse(email);
-    }
-
-    public AuthResDto.AuthRes kakaoLogin(String accessToken) {
-        KakaoResDto kakaoDto = oauth2Client.getKakaoUserInfo(accessToken);
-        Long socialId = kakaoDto.getId();
-        String email = kakaoDto.getEmail();
-        String password = socialId+ADMIN_KEY;
-
-        User kakaoUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId+"");
-
-        if(kakaoUser == null) {
-            String encodedPassword = passwordEncoder.encode(password);
-            User.builder()
-                    .socialId(socialId+"")
-                    .email(email)
-                    .createdAt(LocalDateTime.now())
-                    .password(encodedPassword)
-                    .socialType(SocialType.KAKAO)
-                    .role(UserRole.USER)
-                    .deleted(false)
-                    .build();
-
-            Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-            Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            return AuthResDto.AuthRes.builder()
-                    .accessToken(jwtToken.getToken())
-                    .isNewMember(Boolean.TRUE)
-                    .build();
-        }
-
-        Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return AuthResDto.AuthRes.builder()
-                .accessToken(jwtToken.getToken())
-                .isNewMember(Boolean.FALSE)
-                .build();
-    }
-
-    public AuthResDto.AuthRes googleLogin(String code) {
-        GoogleUserDto googleDto = oauth2Client.getGoogleUserInfo(code);
-
-        String socialId = googleDto.getSub();
-        String email = googleDto.getEmail();
-        String password = socialId + ADMIN_KEY;
-
-        User googleUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId);
-
-        if (googleUser == null) {
-            String encodedPassword = passwordEncoder.encode(password);
-            User.builder()
-                    .socialId(socialId)
-                    .email(email)
-                    .socialType(SocialType.GOOGLE)
-                    .createdAt(LocalDateTime.now())
-                    .password(encodedPassword)
-                    .role(UserRole.USER)
-                    .deleted(false)
-                    .build();
-
-            Authentication googleUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-            Authentication authentication = authenticationManager.authenticate(googleUsernamePassword);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            return AuthResDto.AuthRes.builder()
-                    .accessToken(jwtToken.getToken())
-                    .isNewMember(Boolean.TRUE)
-                    .build();
-        }
-
-        Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return AuthResDto.AuthRes.builder()
-                .accessToken(jwtToken.getToken())
-                .isNewMember(Boolean.FALSE)
-                .build();
-    }
-
-    public AuthResDto.AuthRes githubLogin(String accessToken) {
-        GithubResDto githubDto = oauth2Client.getGithubUserInfo(accessToken);
-
-        String socialId = githubDto.getId();
-        String email = githubDto.getEmail();
-        String password = socialId + ADMIN_KEY;
-
-        User githubUser = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        JwtToken jwtToken = jwtTokenProvider.generateSocialToken(socialId);
-
-        if (githubUser == null) {
-            String encodedPassword = passwordEncoder.encode(password);
-            User.builder()
-                    .socialId(socialId)
-                    .email(email)
-                    .socialType(SocialType.GITHUB)
-                    .createdAt(LocalDateTime.now())
-                    .password(encodedPassword)
-                    .role(UserRole.USER)
-                    .deleted(false)
-                    .build();
-
-            Authentication githubUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-            Authentication authentication = authenticationManager.authenticate(githubUsernamePassword);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            return AuthResDto.AuthRes.builder()
-                    .accessToken(jwtToken.getToken())
-                    .isNewMember(Boolean.TRUE)
-                    .build();
-        }
-
-        Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return AuthResDto.AuthRes.builder()
-                .accessToken(jwtToken.getToken())
-                .isNewMember(Boolean.FALSE)
-                .build();
     }
 
     public AuthResDto.AuthRes updateToken(JwtToken jwtToken) {
@@ -220,16 +97,6 @@ public class AuthService {
 
         return jwtTokenProvider.generateToken(user.getEmail());
 
-    }
-
-    private boolean isNewMember(GoogleUserDto googleUserDto) {
-        Optional<User> user = userRepository.findByEmail(googleUserDto.getEmail());
-        return user.isPresent();
-    }
-
-    public void joinGoogleUser(GoogleUserDto googleUserDto, OauthTokenDto tokenDto) {
-        User user = googleUserDto.toUser(tokenDto.getAccessToken());
-        userRepository.save(user);
     }
 
 }

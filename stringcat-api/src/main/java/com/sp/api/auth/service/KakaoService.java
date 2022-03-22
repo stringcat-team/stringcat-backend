@@ -2,17 +2,11 @@ package com.sp.api.auth.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.sp.api.auth.dto.KakaoResDto;
+import com.sp.api.auth.dto.UserInfoDto;
 import com.sp.exception.type.StringcatCustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
@@ -80,29 +74,7 @@ public class KakaoService {
         return access_token;
     }
 
-    private KakaoResDto getUserInfoByToken(String accessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
-        // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileRequest,
-                String.class
-        );
-
-        JSONObject body = new JSONObject(response.getBody());
-        Long id = body.getLong("id");
-        String email = body.getJSONObject("kakao_account").getString("email");
-
-        return new KakaoResDto(id, email);
-    }
-
-    public String createKakaoUser(String accessToken) throws StringcatCustomException {
+    public UserInfoDto.KakaoUserInfo createKakaoUser(String accessToken) throws StringcatCustomException {
         String reqUrl = "https://kapi.kakao.com/v2/user/me";
 
         try {
@@ -143,7 +115,12 @@ public class KakaoService {
 
             br.close();
 
-            return "id : " + id + "email : " + email;
+            UserInfoDto.KakaoUserInfo kakaoUser = UserInfoDto.KakaoUserInfo.builder()
+                    .socialId(id)
+                    .email(email)
+                    .build();
+
+            return kakaoUser;
 
         } catch (IOException e) {
             e.printStackTrace();
